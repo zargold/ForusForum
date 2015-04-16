@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS cats; CREATE TABLE cats ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, imageUrl TEXT, userID INTEGER, tagA TEXT, tagB TEXT, tagC TEXT, vote INTEGER, updated_at REAL, created_at CURRE);
+DROP TABLE IF EXISTS cats; CREATE TABLE cats ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, imageUrl TEXT, userID INTEGER, tagA TEXT, tagB TEXT, tagC TEXT, vote INTEGER, updated_at REAL, created_at REAL);
 CREATE TRIGGER c_time_update BEFORE UPDATE ON cats BEGIN UPDATE cats SET updated_at = CURRENT_TIMESTAMP WHERE id = new.id; END;
 
-DROP TABLE IF EXISTS posts; CREATE TABLE posts ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, imageUrl TEXT, timeLive INTEGER, timeSticky INTEGER, userID INTEGER, tagA TEXT, tagB TEXT, tagC TEXT, vote INTEGER, updated_at REAL, created_at REAL);
+DROP TABLE IF EXISTS posts; CREATE TABLE posts ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, imageUrl TEXT, timeLive INTEGER, timeSticky INTEGER, userID INTEGER, catID INTEGER, tagA TEXT, tagB TEXT, tagC TEXT, vote INTEGER, updated_at REAL, created_at REAL);
 CREATE TRIGGER timestamp_update BEFORE UPDATE ON posts BEGIN UPDATE posts SET updated_at = CURRENT_TIMESTAMP WHERE id = new.id; END;
 
 DROP TABLE IF EXISTS comments; CREATE TABLE comments ( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, userID TEXT, postID INTEGER, updated_at REAL, created_at REAL);
