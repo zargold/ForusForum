@@ -1,0 +1,28 @@
+{
+  "name": "ForusForum",
+  "version": "1.0.0",
+  "description": "A Node, Express, SQL or NoSQL db built for looks, speed, and all the information you could ever use!",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zargold/ForusForum.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zargold/ForusForum/issues"
+  },
+  "homepage": "https://github.com/zargold/ForusForum",
+  "dependencies": {
+    "body-parser": "^1.12.3",
+    "ejs": "^2.3.1",
+    "express": "^4.12.3",
+    "method-override": "^2.3.2",
+    "sqlite3": "^3.0.5"
+  },
+  "devDependencies": {}
+}
