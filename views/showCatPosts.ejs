@@ -1,28 +1,96 @@
 <%include ./partials/header%>
-<%include ./partials/footer%>
-    <head>
-    <title> <%-post.Ptitle%></title>
-    </head>
-    <h3><a class="catlink" href="/cat/<%-post.catID%>/"><%-cat.Ctitle%></a></h3>
-    <hr>
-    <div class="cat info">
-    <span class="vote"><%-cat.Cvote%></span><strong><a class="taglink" href="/tag/"+<%=cat.tagA%>> <%-cat.tagA%> </a><a class="taglink" href="/tag/"+<%=cat.tagB%>> <%-cat.tagB%> </a> <a class="taglink" href="/tag/"+<%=cat.tagC%>><%-cat.tagC%> </a></strong>
-    </div>
-    <div class="author"><p>Submitted by: <span class="author"><%-cat.userN%></span> <span class="avatar">(<%-cat.avatar%>)</span> <span class="vote"> Rep:<%-cat.Uvote%></span></p></div>
+<head>
+  <title> <%-post.Ptitle%></title>
+</head>
 
-    <h2> <%-post.Ptitle%><span class="author">by: <%-post.userN%></span><span class="vote"> Rep: <%-post.Uvote%></span><span class="created_at">Since: <%-post.created_atU%></span><span class="avatar"><%-post.avatar%></span></h2>
+    <form action="/user/<%=post.userID%>_method=PUT" method="post">
+      <select name="user" required>
+      <%for(var i=0;i <users.length;i++){%>
+      <label> Your User</label>
+      <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
+      &nbsp; <input type="password" name="pw" placeholder="your Password" readonly="" required>
+      <input type="hidden" name="true" value="<%-users[i].id%>">
+    <%}%>
+    </select>
+    <br />
+    <div class="cat">
+    <h4><a class="catlink" href="/cat/<%-post.catID%>/"><%-cat.Ctitle%></a><span class="vote" id="cat"> &nbsp;
+        <label>Category: </label>
+        <input type="hidden" name="post" value="<%=post.catID%>">
+        <input type="submit" name="up" value="&#8657;">
+        &nbsp;<%-cat.Cvote%>&nbsp;
+        <input type="submit" name="down" value="&#8659;">
+         </span>  </span></h4>
+    <div class="catInfo">
+       &#164;<strong><a class="taglink" href="/tag/<%=cat.tagA%>"> <%-cat.tagA%></a></strong>&nbsp;<strong><a class="taglink" href="/tag/<%=cat.tagB%>"><%-cat.tagB%> </a></strong> &nbsp;<strong><a class="taglink" href="/tag/<%=cat.tagC%>"> <%-cat.tagC%> </a></strong>
+    </div>
+    <div class="author">
+      Originator: <span class="author"><a class="authlink" href="user/<%=cat.userID%>/"><%-cat.userN%></a></span> &nbsp; <span class="avatar">(<%-cat.avatar%>)</span> &nbsp;
+      <span class="vote" id="user"> &nbsp;
+        <label>Rep: </label>
+        <input type="hidden" name="user" value="<%=cat.userID%>">
+        <input type="submit" name="up" value="&#8657;">
+        &nbsp;<%-cat.Uvote%>&nbsp;
+        <input type="submit" name="down" value="&#8659;">
+         </span>
+    </div>
+    </div>
+    <div class="postTit">
+      <h2> <%-post.Ptitle%></h2>
+      <div class="postInfo">
+        &#164;<strong><a class="taglink" href="/tag/<%=post.tagA%>/"><%-post.tagA%></a></strong>&nbsp;
+        <strong><a class="taglink" href="/tag/<%=post.tagB%>/"><%-post.tagB%></a></strong>&nbsp;
+        <strong><a class="taglink" href="/tag/<%=post.tagC%>/"><%-post.tagC%></a> </strong>&nbsp;
+        <span class="created_at">Posted: <%-post.created_atP%></span>
+        </div>
+        <div class="author">
+        <span class="author">Author: <a class="authlink" href="user/<%=post.userID%>/"><%-post.userN%></a></span> &nbsp; <span class="created_at"> User since: <%-post.created_atU%></span>&nbsp;<span class="avatar">(<%-post.avatar%>)</span>&nbsp;
+        <span class="vote" id="user"> &nbsp;
+        <label>Rep: </label>
+        <input type="hidden" name="user" value="<%=post.userID%>">
+        <input type="submit" name="up" value="&#8657;">
+        &nbsp;<%-post.Uvote%>&nbsp;
+        <input type="submit" name="down" value="&#8659;">
+         </span>
+      </div>
+    </div>
+    <div class="postBod">
     <img src="<%=post.PimageUrl%>">
-    <p><%-post.Pbody%></p>
-    <p><strong><%-post.tagA%> <%-post.tagB%> <%-post.tagC%></strong><span class="updated_at"><%-post.Pupdated_at%></span></p>
-    <h3>Comments</h3>
+    <p class="body"><%-post.Pbody%></p>
+      <div class="postMini">
+        <span class="postmini">
+        &#164;<strong><a class="taglink" href="/tag/<%=post.tagA%>/"><%-post.tagA%></a></strong>&nbsp;
+        <strong><a class="taglink" href="/tag/<%=post.tagB%>/"><%-post.tagB%></a></strong>&nbsp;
+        <strong><a class="taglink" href="/tag/<%=post.tagC%>/"><%-post.tagC%></a></strong>&nbsp;
+        <span class="vote" id="post">
+        <label>Post: </label>
+        <input type="hidden" name="post" value="<%=comments.postID%>">
+        <input type="submit" name="up" value="&#8657;">
+        &nbsp;<%-post.Pvote%>&nbsp;
+        <input type="submit" name="down" value="&#8659;">
+        </span>
+        </span>
+      </div>
+    </div>
+
+    <h4>Comments</h4>
+    <div class="comFull">
     <% comments.forEach(function(key){ %>
-      <div>    
-      <article>     
-        <h4><%- key.updated_at %> - <%- key.userID %>: tags:  <strong><%-key.title%></strong></h4>
-        <p><%- key.body %></p>
-      </article>
+      <div class="singleCom">
+      <div class="comInfo">
+      Created:<%- key.created_atM %>
+      <strong><%-key.Mtitle%></strong>
+      </div>
+      <div class="author">
+        <span class="author"><%-post.userN%>:</span>
+        <span class="created_at"> Since: <%-post.created_atU%></span> 
+        <span class="avatar">  (<%-post.avatar%>)</span>
+        <span class="vote"> Rep: <%-post.Uvote%></span>
+      </div>
+        <p><%- key.bodyM %></p>
       </div>
     <%});%>
+    </div>
     <h3>Add your own<br></h3>
     <div>
       <form method="POST" action="/post/<%=post.id%>">
@@ -54,3 +122,5 @@
     <li><a href="/"> See All Posts</a></li>
     <li><a href="/post/add"> Add another Post</a></li><span>
     </ul>
+    </form>
+<%include ./partials/footer%>

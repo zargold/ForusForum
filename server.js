@@ -79,26 +79,34 @@ app.get("/cat/:cid/post/:id", function(req, res) {
   var postId = req.params.id;
   //console.log(postId);
   //What is the information about the user who wrote this post?
-  db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
+  db.all("SELECT * FROM users;", function(err, udata) {
     if (err) console.log(err);
     else {
-      var cData = dataInCat;
-      console.log(cData);
-      db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
+      var userlist = udata;
+      console.log("this is UserLIST" + userlist);
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
         if (err) console.log(err);
         else {
-          var pData = dataInPost;
-          console.log(pData);
-          //What is the user's info for these comments?
-          db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
+          var cData = dataInCat;
+          console.log(cData);
+          db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
             if (err) console.log(err);
             else {
-              var mData = dataInComment;
-              console.log(cData);
-              res.render("showCatPosts.ejs", {
-                cat: cData,
-                post: pData,
-                comments: mData,
+              var pData = dataInPost;
+              console.log(pData);
+              //What is the user's info for these comments?
+              db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
+                if (err) console.log(err);
+                else {
+                  var mData = dataInComment;
+                  console.log(cData);
+                  res.render("showCatPosts.ejs", {
+                    cat: cData,
+                    post: pData,
+                    comments: mData,
+                    users: userlist,
+                  });
+                }
               });
             }
           });

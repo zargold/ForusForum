@@ -24,6 +24,7 @@ main h3 {
 h2 {
   font-weight: bolder;
   font-size: 1.6em;
+  margin: 5px;
 }
 h3{
   font-size: 1.2em;
@@ -36,7 +37,7 @@ span {
 }
 input,
 textarea {
-  background: rgba(240, 240, 30, 1);
+  background: rgba(240, 240, 30, 0.5);
   font-size: 0.85em;
   border: 2% outset rgba(150, 150, 150, 1);
   border-radius: 4px;
@@ -102,7 +103,7 @@ ol textarea {
 strong{
   font-style: normal;
   font-weight: lighter;
-  background: rgba(200,200,200,0.25);
+  background: rgba(180,180,180,0.15);
 }
 h4,
 h5 {
@@ -111,9 +112,9 @@ h5 {
 }
 div {
   border: 4px solid rgba(45, 10, 70, 0.25);
-  max-width: 80%;
-  min-width: 80%;
-  width: 80%;
+  max-width: 85%;
+  min-width: 85%;
+  width: 85%;
 }
 div input {
   padding: 0.1%;
@@ -140,9 +141,62 @@ span li, a {
 span input {
   min-width: 10%;
   background: red;
-  min-width: 220px;
+  min-width: 120px;
   min-height: 2%;
   min-height: 50px;
   color: white;
   text-transform: uppercase;
+}
+.created_at{
+  font-size: 50%;
+}
+.taglink{
+  font-size: 80%;
+}
+.author{
+  font-size:88%;
+  background: rgba(2, 2, 180, 0.025);
+  font-weight: lighter;
+}
+.vote{
+  font-size:80%;
+}
+.vote input{
+  max-width:48px;
+  max-height:40px;
+  background: rgba(180, 0, 100, 0.5);
+}
+.avatar{
+  font-size:80%;
+}
+.cat {
+  border: 4px solid rgba(250, 70, 0, 0.25);
+}
+.cat a, .catInfo a{
+  color: rgba(250, 70, 0, 1);
+}
+.catInfo{
+  background:rgba(250, 70, 0, 0.25);
+}
+.postTit, .postBod{
+  border: 4px solid rgba(25, 255, 175, 0.25);
+}
+.postTit a, .postMini a{
+  color: rgba(25, 255, 175, 1);
+}
+.postInfo, .postMini{
+  margin: 5px 0px 0px 0px;
+  background: rgba(25, 255, 175, 0.08);
+}
+.singleCom{
+  min-width:92%;
+}
+#user input{
+  background:rgba(2, 2, 180, 0.5);
+}
+#post input{
+  background: rgba(25, 255, 175, 0.5);
+}
+#cat input{
+  background: rgba(250, 70, 0, 0.5);
 }
