@@ -74,41 +74,45 @@ app.get("/post/add", function(req, res) {
 app.get("/post/:id", function(req, res) {
   var postId = req.params.id;
   //console.log(postId);
-  db.get("SELECT * FROM posts WHERE id = (?);", postId, function(err, dataInPost) {
+  db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
     if (err) console.log(err);
     else {
       var pData = dataInPost;
       console.log(pData);
-      var posterID= pData.userID;
-      console.log(posterID);
-      db.get("SELECT * FROM users WHERE id=(?);", posterID, function(err, userData){
-        if(err) console.log(err);
-        else{
-          var poster= userData;
-          console.log(poster);
-      db.all("SELECT * FROM comments WHERE postID=(?);", postId, function(err, dataInComments) {
-        if (err) console.log(err);
-        else {
-          var cData = dataInComments;
-          console.log(cData);
-          var commentorID=cData.userID;
-          db.all("SELECT * FROM users WHERE id=(?)", commentorID, function(err, usersData){
-            if(err) console.log(err);
-            else{
-              var commentor=usersData;
-
-            }
-          })
-          res.render("showCatPosts.ejs", {
-            post: pData,
-            comments: cData,
-            userP: poster,
-            userC: commentor
-          });
-        }
-      });
+      // var posterID= pData.userID;
+      // console.log(posterID);
     }
   });
+      // db.get("SELECT * FROM users WHERE id=(?);", posterID, function(err, userData){
+      //   if(err) console.log(err);
+      //   else{
+      //     var poster= userData;
+      //     console.log(poster);
+      // db.all("SELECT * FROM comments WHERE postID=(?);", postId, function(err, dataInComments) {
+      //   if (err) console.log(err);
+      //   else {
+      //     var cData = dataInComments;
+      //     var id
+      //     console.log(cData);
+
+      //     //var commentorID=cData.userID;
+      //     db.all("SELECT * FROM users WHERE id=(?)", commentorID, function(err, usersData){
+      //       if(err) console.log(err);
+      //       else{
+      //         var commentor=usersData;
+
+      //       }
+  //         res.render("showCatPosts.ejs", {
+  //           post: pData,
+  //           comments: cData,
+  //           userP: poster,
+  //           userC: commentor
+  //         });
+  //       })
+  //       }
+  //     });
+  //   }
+  // });
 });
 
 //Upon clicking: edit this particular blogpost (source:index,view)
