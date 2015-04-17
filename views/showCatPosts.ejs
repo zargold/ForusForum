@@ -1,9 +1,19 @@
 <%include ./partials/header%>
 <%include ./partials/footer%>
-    <h2> <%-post.title%><span class="author">by: <%-post.userID%> </span><span class="created_at"><%-post.created_at%></span></h2>
-    <img src="<%=post.imageUrl%>">
-    <p><%-post.body%></p>
-    <p><strong><%-post.tagA%> <%-post.tagB%> <%-post.tagC%></strong><span class="updated_at"><%-post.updated_at%></span></p>
+    <head>
+    <title> <%-post.Ptitle%></title>
+    </head>
+    <h3><a class="catlink" href="/cat/<%-post.catID%>/"><%-cat.Ctitle%></a></h3>
+    <hr>
+    <div class="cat info">
+    <span class="vote"><%-cat.Cvote%></span><strong><a class="taglink" href="/tag/"+<%=cat.tagA%>> <%-cat.tagA%> </a><a class="taglink" href="/tag/"+<%=cat.tagB%>> <%-cat.tagB%> </a> <a class="taglink" href="/tag/"+<%=cat.tagC%>><%-cat.tagC%> </a></strong>
+    </div>
+    <div class="author"><p>Submitted by: <span class="author"><%-cat.userN%></span> <span class="avatar">(<%-cat.avatar%>)</span> <span class="vote"> Rep:<%-cat.Uvote%></span></p></div>
+
+    <h2> <%-post.Ptitle%><span class="author">by: <%-post.userN%></span><span class="vote"> Rep: <%-post.Uvote%></span><span class="created_at">Since: <%-post.created_atU%></span><span class="avatar"><%-post.avatar%></span></h2>
+    <img src="<%=post.PimageUrl%>">
+    <p><%-post.Pbody%></p>
+    <p><strong><%-post.tagA%> <%-post.tagB%> <%-post.tagC%></strong><span class="updated_at"><%-post.Pupdated_at%></span></p>
     <h3>Comments</h3>
     <% comments.forEach(function(key){ %>
       <div>    

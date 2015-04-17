@@ -57,7 +57,10 @@ app.get("/comments", function(req, res) {
 });
 //upon request of adding a new article is made.
 app.post("/posts", function(req, res) {
-  var textBody = req.body.body, title = req.body.title, imageUrl = req.body.imageUrl, user=1;//req.body.user;
+  var textBody = req.body.body,
+    title = req.body.title,
+    imageUrl = req.body.imageUrl,
+    user = 1; //req.body.user;
   db.run("INSERT INTO posts (title, body, imageUrl, userID, vote, created_at) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", title, textBody, imageUrl, user, function(err, data) {
     if (err) console.log(err);
     else { //console.log(data);
@@ -70,49 +73,39 @@ app.post("/posts", function(req, res) {
 app.get("/post/add", function(req, res) {
   res.render("add.ejs");
 });
+
 //Upon viewing actual blogpost
-app.get("/post/:id", function(req, res) {
+app.get("/cat/:cid/post/:id", function(req, res) {
   var postId = req.params.id;
   //console.log(postId);
-  db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
+  //What is the information about the user who wrote this post?
+  db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
     if (err) console.log(err);
     else {
-      var pData = dataInPost;
-      console.log(pData);
-      // var posterID= pData.userID;
-      // console.log(posterID);
+      var cData = dataInCat;
+      console.log(cData);
+      db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
+        if (err) console.log(err);
+        else {
+          var pData = dataInPost;
+          console.log(pData);
+          //What is the user's info for these comments?
+          db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
+            if (err) console.log(err);
+            else {
+              var mData = dataInComment;
+              console.log(cData);
+              res.render("showCatPosts.ejs", {
+                cat: cData,
+                post: pData,
+                comments: mData,
+              });
+            }
+          });
+        }
+      });
     }
   });
-      // db.get("SELECT * FROM users WHERE id=(?);", posterID, function(err, userData){
-      //   if(err) console.log(err);
-      //   else{
-      //     var poster= userData;
-      //     console.log(poster);
-      // db.all("SELECT * FROM comments WHERE postID=(?);", postId, function(err, dataInComments) {
-      //   if (err) console.log(err);
-      //   else {
-      //     var cData = dataInComments;
-      //     var id
-      //     console.log(cData);
-
-      //     //var commentorID=cData.userID;
-      //     db.all("SELECT * FROM users WHERE id=(?)", commentorID, function(err, usersData){
-      //       if(err) console.log(err);
-      //       else{
-      //         var commentor=usersData;
-
-      //       }
-  //         res.render("showCatPosts.ejs", {
-  //           post: pData,
-  //           comments: cData,
-  //           userP: poster,
-  //           userC: commentor
-  //         });
-  //       })
-  //       }
-  //     });
-  //   }
-  // });
 });
 
 //Upon clicking: edit this particular blogpost (source:index,view)

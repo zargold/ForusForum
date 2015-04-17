@@ -3,7 +3,7 @@
     <h2> Your Blog Posts </h2>
     <ol>
       <% posts.forEach(function(key){ %>
-      <li> <div><a href="/post/<%=key.id%>"><%-key.title%> <strong style="font-size:0.65em">(updated: <%-key.updated_at%>)</strong></a>
+      <li> <div><a href="cat/<%=key.catID%>/post/<%=key.id%>"><%-key.title%> <strong style="font-size:0.65em">(updated: <%-key.updated_at%>)</strong></a>
       <span style="font-size: 0.75em; margin: 5px 0px 0px 0px;"><a href="/post/<%=key.id%>/edit">Edit this</a><form method="POST" action="/post/<%=key.id%>?_method=DELETE">
       <input type="submit" name= "delete" value="Delete this Post"></div></span>
       </form></li>
