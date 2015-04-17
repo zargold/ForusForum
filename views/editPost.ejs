@@ -1,0 +1,56 @@
+<%include ./partials/header%>
+<%include ./partials/footer%>
+ <main>
+  <ol style="display: inline"><h3> Edit Your Post: <%-post.title%></h3>
+    <form method="POST"action="/post/<%=post.id%>?_method=PUT">
+      <li><label>Edit Title:<br></label><input type="text"name="title"value="<%-post.title%>"></li>
+      <li><label>Edit Body:<br /></label><textarea rows="15" cols="70" name="body"> <%-post.body%></textarea></li>
+      <li><label>Edit Image URL:<br></label><input type="text"name="imageUrl"value="<%=post.imageUrl%>"></li>
+      <label> Ensure Everything looks good:)</label>
+      <li style="display:inline"><span><input type="submit"value="Confirm Edits"></span>
+    </form>  
+    <form method="POST" action="/post/<%=post.id%>?_method=DELETE">
+      <label> Don't like it anymore?</label>
+      <span><input type="submit" name= "delete" value="Delete this Post"></span>
+      </li>
+    </form>
+  </ol>
+
+  <hr>
+  <ul><h3>Comments</h3>
+      <%comments.forEach(function(key){%>
+      <li>
+        <div>
+          <form method="POST" action="/post/<%=post.id%>/comment?_method=PUT">
+            <label> Writer: <br /></label>
+            <input type="text" value="<%-key.userID%>" name="userID" placeholder="Johnny Coltrene">
+            <label> <br>Tag: </br></label>
+            <input type="text" value="<%-key.title%>" placeholder="Great Work|Typo|Funny" name="title">
+
+            <label> <br>Comment: </br></label>
+            <textarea name="body" rows="5" cols="60" placeholder="This is a really cool post, but an even cooler WEBSITE!"> <%-key.body%> </textarea>
+            <input type="HIDDEN" value="<%=key.id%>" name="id">
+            <label> Everything Looks Good?</label>
+            <span><input type="SUBMIT" value="Submit Change"></span>
+          </form>
+          <form method="POST" action="/post/<%=post.id%>/comment?_method=DELETE">
+            <input type="HIDDEN" value="<%=key.id%>" name="id">
+           <label>Spam? Hate?</label>
+           <span><input type="SUBMIT" value="DELETE COMMENT!"></span><br></br>
+          </form>
+        </div>
+      </li>
+    <%});%>
+  </ul>
+<hr>
+    <span>
+    <ul>
+      <form method="POST" action="/post/<%=post.id%>?_method=DELETE">
+      <li><label> Are you sure?<br /></label>
+      <input type="submit" name= "delete" value="Delete this Post">
+      </form></li>
+      <li><a href="/"> See All Posts</a></li>
+      <li><a href="/post/add"> Add another Post</a></li>
+    </ul>
+    </span>
+    </main>

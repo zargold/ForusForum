@@ -1,0 +1,148 @@
+body {
+  font-family: 'Dosis', Futura, Verdana;
+  font-size: 1.8em;
+  list-style-type: none;
+  font-style: bolder;
+}
+main {
+  display: block;
+  margin: 4px 1%;
+  list-style-type: none;
+
+}
+main p {
+  border: rgba(220,0,100,0.25) solid 1px;
+  border-radius: 0.2%;
+  margin: 6px;
+  padding: 0.25em;
+  max-width: 80%;
+  background: rgba(220,200,220,0.25);
+}
+main h3 {
+  margin: 0 auto;
+}
+h2 {
+  font-weight: bolder;
+  font-size: 1.6em;
+}
+h3{
+  font-size: 1.2em;
+}
+span {
+  font-size: 1.1em;
+  color: rgba(30, 30, 30, 0.95);
+  font-weight: normal;
+  list-style-type: none;
+}
+input,
+textarea {
+  background: rgba(240, 240, 30, 1);
+  font-size: 0.85em;
+  border: 2% outset rgba(150, 150, 150, 1);
+  border-radius: 4px;
+  font-family:'Dosis', Futura, Verdana, sans-serif;
+}
+input:hover,
+textarea:hover {
+  background: rgba(255, 200, 100, 0.9);
+  border-bottom: 0.2% solid rgba(175, 140, 60, 1);
+  border-radius: 4px;
+  cursor: text;
+}
+
+::-webkit-input-placeholder {
+  color: rgba(140, 40, 80, 0.4);
+  z-index: 10;
+}
+:-moz-placeholder {
+  color: rgba(140, 40, 80, 0.4);
+  z-index: 10;
+}
+::-moz-placeholder{
+  color: rgba(140, 40, 80, 0.4);
+  z-index: 10;
+}
+:-ms-input-placeholder{
+  color: rgba(140, 40, 80, 0.4);
+  z-index: 10;
+}
+ul {
+  padding: 0% 0% 0% 1%;
+  display: inline-block;
+  list-style-type: none;
+  max-width: 88%;
+}
+ul li {
+  margin: 0 auto;
+  padding: 1% 2% 0.5% 2%;
+  max-width: 100%;
+  list-style-type: none;
+  min-width: 100%;
+}
+label{
+  padding: 0px 0px 0px 0px;
+  font-size: 0.75em;
+}
+ul input,
+ul textarea {
+  background: rgba(20, 200, 20, 0.5);
+  min-width: 95%;
+  max-width: 95%;
+}
+ol {
+  display: block;
+  list-style-type: none;
+}
+ol input,
+ol textarea {
+  min-width: 80%;
+  max-width: 80%;
+  background: rgba(60, 20, 90, 0.5);
+}
+strong{
+  font-style: normal;
+  font-weight: lighter;
+  background: rgba(200,200,200,0.25);
+}
+h4,
+h5 {
+  margin: 0.1%;
+  border: 0px 1px 2px 1px rgba(100, 50, 100, 0.25) solid;
+}
+div {
+  border: 4px solid rgba(45, 10, 70, 0.25);
+  max-width: 80%;
+  min-width: 80%;
+  width: 80%;
+}
+div input {
+  padding: 0.1%;
+}
+span ul {
+  min-width: 100%;
+  display: inline;
+}
+a {
+  min-width: 3%;
+  min-width: 50px;
+  min-height: 3%;
+  min-height: 50px;
+  text-decoration: none;
+  font-size: 1.01em;
+}
+article{
+  font-size:0.8em;
+}
+span li, a {
+  max-width: 25%;
+  display: inline;
+}
+span input {
+  min-width: 10%;
+  background: red;
+  min-width: 220px;
+  min-height: 2%;
+  min-height: 50px;
+  color: white;
+  text-transform: uppercase;
+}
