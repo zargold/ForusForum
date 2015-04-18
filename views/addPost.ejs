@@ -1,11 +1,31 @@
 <%include ./partials/header%>
 <%include ./partials/footer%>
+<%include ./partials/header%>
     <ol>
-      <form method="POST" action="/posts">
-        <li><label>Add a Title:<br></label><input type="text" name="title" placeholder="10 things I love about You!"></li>
-        <li><label>Add the Body:<br /></label><textarea rows="10" cols="50" name="body" placeholder="Wow I just found the best blog editTor evAr and it is so 1337!"></textarea></li>
-        <li><label>Add an image URL:<br></label><input type="text" name="imageUrl" placeholder="images.google.com/search/coolestPicEvar.jpg"></li>
+      <form method="POST" action="/cats">
+      <select class="userSelect" name="user" required>
+      <%for(var i=0;i <users.length; i++){%>
+      <label> Your User</label>
+      <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
+      &nbsp; <input type="password" name="pw" placeholder="your Password" required>
+      <input type="hidden" name="true" value="<%-users[i].id%>">
+        <%}%>
+        </select>
+        <span class="error">
+        <%if(error.text==="Nope!"){%>
+        &#9756;
+        <%}%>
+        </span>
+        <li><label>Add a Title:<br></label><input type="text" name="Ptitle" placeholder="Things Related to Nyan Cats!"></li>
+        <li><label>Add the Description:<br /></label><textarea rows="10" cols="50" name="Pbody" placeholder="Nyan cats are really shiny lets collect images of them and talk about how cool they ARE!"></textarea></li>
+        <li><label>Add an image URL:<br></label><input type="text" name="PimageUrl" placeholder="images.google.com/search/coolestNyanPatPicEvar.jpg"></li>
         <li><label> Ensure Everything looks good: )<br></label>
+        <li class="tagAdd"><label> Add Tags!<br /></label>
+        <input class="tags" type="text" name="tagA" placeholder="Cats">
+        <input class="tags" type="text" name="tagB" placeholder="Pijamas">
+        <input class="tags" type="text" name="tagC" placeholder="Rainbows">
+        </li>
         <span><input type="submit" value="Confirm"></li></span>
       </form>  
     </ol>
+<%include ./partials/footer%>

@@ -1,0 +1,96 @@
+<%include ./partials/header%>
+<head>
+  <title> <%-cat.Ctitle%></title>
+</head>
+    <form method="POST" action="/cats">
+      <select class="userSelect" name="user" required>
+      <%for(var i=0;i <users.length; i++){%>
+      <label> Your User</label>
+      <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
+      &nbsp; <input type="password" name="pw" placeholder="your Password" required>
+      <input type="hidden" name="true" value="<%-users[i].id%>">
+        <%}%>
+        </select>
+        
+        <%if(error.text==="Nope!"){%>
+        <span class="error">
+        &#9756;
+        <%}%>
+        </span>
+      <div class="cat">
+        <h2><%-cat.Ctitle%></h2>
+      </div>
+      <div class="catInfo">
+        &#164;<strong>
+        <a class="taglink" href="/tag/<%=cat.tagA%>"> 
+        <%-cat.tagA%>
+        </a>
+        </strong>
+        &nbsp;<strong>
+        <a class="taglink" href="/tag/<%=cat.tagB%>">
+        <%-cat.tagB%> 
+        </a>
+        </strong>
+         &nbsp;<strong>
+         <a class="taglink" href="/tag/<%=cat.tagC%>"> <%-cat.tagC%> </a>
+         </strong>
+         <span class="created_at">&nbsp;Created: <%-cat.created_atC%></span>
+        <span class="vote" id="cat"> &nbsp;
+        <label>Category: </label>
+        <input type="hidden" name="category" value="<%=posts.catID%>">
+        <input type="submit" name="up" value="&#8657;">
+        &nbsp;<%-cat.Cvote%>&nbsp;
+        <input type="submit" name="down" value="&#8659;">
+        </span>
+    </div>
+    <div class="author">
+      Originator: <span class="author"><a class="authlink" href="user/<%=cat.userID%>/"><%-cat.userN%></a></span> &nbsp; <span class="avatar">(<%-cat.avatar%>)</span> &nbsp;
+      <span class="created_at"> &nbsp;Created: <%-cat.created_atU%></span>
+      <span class="vote" id="user"> &nbsp;
+        <label>Rep: </label>
+        <input type="hidden" name="user" value="<%=cat.userID%>">
+        <input type="submit" name="up" value="&#8657;">
+        &nbsp;<%-cat.Uvote%>&nbsp;
+        <input type="submit" name="down" value="&#8659;">
+         </span>
+    </div>
+    <!-- Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC)  -->
+    <div class="cat">
+    <img src="<%-cat.CimageUrl%>">
+    <p class="body"><%-cat.Cbody%></p>
+    <div class="catInfo">
+    <span class="editCat"><a href="/cat/<%=cat.id%>/edit"> Edit this Category!</a></span>
+    <% if(cat.updated_atC !==null){%>
+        <span class="created_at">Updated: <%-post.updated_atP%>
+        <%}%>
+    </div>
+    </div>
+    </form>
+    <div> 
+    <ol>
+      <% posts.forEach(function(key){ %>
+      <li>
+      <div>
+      <a href="/cat/<%=key.catID%>/post/<%=key.id%>"><%-key.Ptitle%> <span class="created_at">(updated: <%-key.created_atP%>)<a class="edit" href="/post/<%=key.id%>/edit">Edit</a></span></a><br />
+      <span class="delete">
+        <form method="POST" action="/post/<%=key.id%>?_method=DELETE">
+        <input type="submit" name= "delete" value="Delete Post">
+        </form>
+      </span>
+      </div>
+      </li>
+      <%});%>
+    </ol>
+    </div>
+    </main>
+    <div>
+    <ul>
+    <li><span class="editCat"><a href="/cat/<%=cat.id%>/edit"> Edit this Category!</a></span></li>
+      <li><form method="POST" action="/post/<%=cat.id%>?_method=DELETE">
+      <input type="submit" name= "delete" value="Delete this Category">
+      </form></li>
+    <li><a href="/"> See All Posts</a></li>
+    <li><a href="/post/add"> Add another Post</a></li></span>
+    </ul>
+    </div>
+<%include ./partials/footer%>

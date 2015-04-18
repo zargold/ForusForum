@@ -4,7 +4,7 @@ CREATE TRIGGER c_time_update BEFORE UPDATE ON cats BEGIN UPDATE cats SET updated
 DROP TABLE IF EXISTS posts; CREATE TABLE posts ( id INTEGER PRIMARY KEY AUTOINCREMENT, Ptitle TEXT, Pbody TEXT, PimageUrl TEXT, timeLive INTEGER, timeSticky INTEGER, userID INTEGER, catID INTEGER, tagA TEXT, tagB TEXT, tagC TEXT, Pvote INTEGER, updated_atP REAL, created_atP REAL);
 CREATE TRIGGER timestamp_update BEFORE UPDATE ON posts BEGIN UPDATE posts SET updated_atP = CURRENT_TIMESTAMP WHERE id = new.id; END;
 
-DROP TABLE IF EXISTS comments; CREATE TABLE comments ( id INTEGER PRIMARY KEY AUTOINCREMENT, titleM TEXT, bodyM TEXT, userID TEXT, postID INTEGER, updated_atM REAL, created_atM REAL);
+DROP TABLE IF EXISTS comments; CREATE TABLE comments ( id INTEGER PRIMARY KEY AUTOINCREMENT, titleM TEXT, bodyM TEXT, userID TEXT, Mvote INTEGER, postID INTEGER, updated_atM REAL, created_atM REAL);
 CREATE TRIGGER c_timestamp_update BEFORE UPDATE ON comments BEGIN UPDATE comments SET updated_atM = CURRENT_TIMESTAMP WHERE id = new.id; END;
 
 DROP TABLE IF EXISTS users; CREATE TABLE users ( id INTEGER PRIMARY KEY AUTOINCREMENT, firstN TEXT, lastN TEXT, userN TEXT, email TEXT, imageUrl TEXT, image BLOB, password TEXT, Uvote INTEGER, avatar TEXT, updated_atU REAL, created_atU REAL);

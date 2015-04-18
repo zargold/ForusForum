@@ -2,7 +2,6 @@ body {
   font-family: 'Dosis', Futura, Verdana;
   font-size: 1.8em;
   list-style-type: none;
-  font-style: bolder;
 }
 main {
   display: block;
@@ -12,8 +11,8 @@ main {
 main p {
   border: rgba(220,0,100,0.25) solid 1px;
   border-radius: 0.2%;
-  margin: 6px;
-  padding: 0.25em;
+  margin: 10px;
+  padding: 0.5em;
   max-width: 80%;
   background: rgba(220,200,220,0.25);
 }
@@ -24,6 +23,7 @@ h2 {
   font-weight: bolder;
   font-size: 1.6em;
   margin: 5px;
+  max-width: 100%;
 }
 h3{
   font-size: 1.2em;
@@ -38,14 +38,14 @@ input,
 textarea {
   background: rgba(240, 240, 30, 0.5);
   font-size: 0.85em;
-  border: 2% outset rgba(150, 150, 150, 1);
+  border: 0px 0px 3px 0px rgba(150, 150, 150, 1);
   border-radius: 4px;
   font-family:'Dosis', Futura, Verdana, sans-serif;
 }
 input:hover,
 textarea:hover {
   background: rgba(255, 200, 100, 0.9);
-  border-bottom: 0.2% solid rgba(175, 140, 60, 1);
+  border: 0px 1px 2px 1px solid rgba(175, 140, 60, 1);
   border-radius: 4px;
   cursor: text;
 }
@@ -67,37 +67,44 @@ textarea:hover {
   z-index: 10;
 }
 ul {
-  padding: 0% 0% 0% 1%;
+  padding: -1% -1% -1% -1%;
+  margin: 0 auto;
   display: inline-block;
   list-style-type: none;
-  max-width: 88%;
+  min-width: 90%;
+  max-width: 90%;
+  background: ;
 }
 ul li {
   margin: 0 auto;
-  padding: 1% 2% 0.5% 2%;
-  max-width: 100%;
+  padding: 0% 0% 0% 0%;
+  max-width: 90%;
   list-style-type: none;
-  min-width: 100%;
+  width: 90%;
 }
 label{
   padding: 0px 0px 0px 0px;
   font-size: 0.75em;
 }
 ul input,
-ul textarea {
-  background: rgba(20, 200, 20, 0.5);
-  min-width: 95%;
-  max-width: 95%;
+ul  {
+    background: linear-gradient(rgba(140, 32, 220, 0.1), rgba(110, 0, 175, 0.1));
+  background: -webkit-linear-gradient(rgba(140, 32, 220, 0.1), rgba(110, 0, 175, 0.1));
+  background: -moz-linear-gradient(rgba(140, 32, 220, 0.1), rgba(110, 0, 175, 0.1));
+  width: 50%;
+  min-height: 40px;
 }
 ol {
   display: block;
   list-style-type: none;
 }
-ol input,
 ol textarea {
-  min-width: 80%;
+  width: 80%;
   max-width: 80%;
   background: rgba(60, 20, 90, 0.5);
+}
+ol input {
+  width: 50%;
 }
 strong{
   font-style: normal;
@@ -114,12 +121,13 @@ div {
   max-width: 85%;
   min-width: 85%;
   width: 85%;
+  margin:0 auto;
 }
 div input {
   padding: 0.05%;
 }
 span ul {
-  min-width: 100%;
+  width: 100%;
   display: inline;
 }
 a {
@@ -140,11 +148,47 @@ span li, a {
 span input {
   min-width: 10%;
   background: red;
-  min-width: 120px;
+  width: 25%;
   min-height: 2%;
   min-height: 50px;
   color: white;
   text-transform: uppercase;
+}
+img{
+  margin: 0 auto;
+  max-width:100%;
+  max-height:800px;
+}
+.topcat{
+  width:100%;
+  font-size: 0.9em;
+  -ms-box-orient: horizontal;
+  max-width: 100%;
+  min-width: 100%;
+  width: 100%;
+  padding:0px 0px 0px 0px;
+  line-height:0.9em;
+}
+.cats{
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: flex-box;
+  flex-wrap: wrap;
+  max-width:100%;
+  width:100%;
+  padding:0px 0px 0px 0px;
+  line-height:0.9em;
+}
+.cats li, .cats a{
+  width:initial;
+  max-width:40%;
+  padding:2px 0px 0px 0px;
+  margin:0 auto;
+  line-height:0.9em;
+  min-height:40px;
 }
 .created_at{
   font-size: 50%;
@@ -156,6 +200,9 @@ span input {
   font-size:88%;
   background: rgba(2, 2, 180, 0.025);
   font-weight: lighter;
+}
+.author a{
+  color:;
 }
 .vote{
   font-size:80%;
@@ -175,6 +222,9 @@ span input {
 .cat a, .catInfo a{
   color: rgba(250, 70, 0, 1);
 }
+.cat bod{
+  background: rgba(231, 174, 59, 0.15);
+}
 .catInfo{
   background:rgba(250, 70, 0, 0.25);
 }
@@ -191,21 +241,61 @@ span input {
   background: rgba(59, 231, 174, 0.15);
 }
 .postInfo, .postMini{
-  margin: 5px 0px 0px 0px;
+  margin: 0 auto;
   background: rgba(59, 231, 174, 0.15);
 }
 .singleCom{
   min-width:92%;
-  background: -webkit-linear-gradient(rgba(140, 32, 220, 0.5), rgba(110, 0, 175, 0.5));
-  background: -o-linear-gradient(rgba(140, 32, 220, 0.5), rgba(110, 0, 175, 0.5));
-  background: -moz-linear-gradient(rgba(140, 32, 220, 0.5), rgba(110, 0, 175, 0.5));
-  background: linear-gradient(rgba(140, 32, 220, 0.5), rgba(110, 0, 175, 0.5));
+  background: -webkit-linear-gradient(rgba(140, 22, 220, 0.15), rgba(120, 0, 200, 0.22));
+  background: -o-linear-gradient(rgba(140, 22, 220, 0.15), rgba(120, 0, 200, 0.22));
+  background: -moz-linear-gradient(rgba(140, 22, 220, 0.15), rgba(120, 0, 200, 0.22));
+  background: linear-gradient(rgba(140, 22, 220, 0.15), rgba(120, 0, 200, 0.22));
 }
-.userSelect{
-  font-size: 2em;
+.singleCom a{
+  color: rgba(140, 22, 220,1);
+}
+
+.userSelect {
+  font-size: 1em;
   min-width: 250px;
-  margin: 10px;
-  text-indent: 1px;
+  margin: 2% 1% 1% 5%;
+  border: none;
+  line-height: 1em;
+  font-family:'Dosis', Futura, Verdana, sans-serif;
+  font-style: bold;
+}
+.titleCommentBuild input, li textarea{
+  width: 100%;
+}
+.error{
+  font-size:1em;
+  color:rgba(255,255,255,1);
+  background: -webkit-linear-gradient(rgba(250, 10, 10, 0.85), rgba(230, 0, 0, 0.9));
+  background: -o-linear-gradient(rgba(250, 10, 10, 0.85), rgba(230, 0, 0, 0.9));
+  background: -moz-linear-gradient(rgba(250, 10, 10, 0.85), rgba(230, 0, 0, 0.9));
+  background: linear-gradient(rgba(250, 10, 10, 0.85), rgba(230, 0, 0, 0.9));
+  padding: 0em 0.15em 0em 0.15em;
+}
+.edit{
+  max-width: 4em;
+  max-height: 1em;
+  max-width: 10%;
+  padding:1px 4px 1px 4px;
+  font-size: 75%;
+}
+#password input{
+  width: 60%;
+  background: linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
+  background: -webkit-linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
+  background: -moz-linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
+}
+#cat input{
+  background: rgba(211, 150, 10, 0.75);
+  background: linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
+  background: -webkit-linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
+  background: -moz-linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
+  min-width: 60px;
+  max-width: 60px;
 }
 #user input{
   background: rgba(40, 150, 211, 0.75);
@@ -223,11 +313,11 @@ span input {
   min-width: 60px;
   max-width: 60px;
 }
-#cat input{
-  background: rgba(211, 150, 10, 0.75);
-  background: linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
-  background: -webkit-linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
-  background: -moz-linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
+#comment input{
+  background: rgba(140, 32, 220, 1);
+  background: linear-gradient(rgba(140, 32, 220, 1), rgba(110, 0, 175, 1));
+  background: -webkit-linear-gradient(rgba(140, 32, 220, 1), rgba(110, 0, 175, 1));
+  background: -moz-linear-gradient(rgba(140, 32, 220, 1), rgba(110, 0, 175, 1));
   min-width: 60px;
-  max-width: 60px;
+  max-width: 200px;
 }

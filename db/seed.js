@@ -9,8 +9,8 @@ db.run("INSERT INTO posts (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userI
   if (err) console.log(err);
 });
 
-// comments ( id INTEGER PRIMARY KEY AUTOINCREMENT, titleM TEXT, bodyM TEXT, userID TEXT, postID INTEGER, updated_atM REAL, created_atM REAL);
-db.run("INSERT INTO comments (titleM, bodyM, userID, postID, created_atM) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)", "Your momma is 42!", "oooohhhhh, and I'm not talking about her age!", "1", "1", function(err) {
+// comments ( id INTEGER PRIMARY KEY AUTOINCREMENT, titleM TEXT, bodyM TEXT, userID TEXT, Mvote INTEGER, postID INTEGER, updated_atM REAL, created_atM REAL);
+db.run("INSERT INTO comments (titleM, bodyM, userID, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", "Your momma is 42!", "oooohhhhh, and I'm not talking about her age!", "1", "1", function(err) {
   if (err) console.log(err);
 });
 // users ( id INTEGER PRIMARY KEY AUTOINCREMENT, firstN TEXT, lastN TEXT, userN TEXT, email TEXT, imageUrl TEXT, image BLOB, password TEXT, Uvote INTEGER, avatar TEXT, updated_atU REAL, created_atU REAL);

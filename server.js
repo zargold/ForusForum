@@ -26,42 +26,117 @@ var request = require("request");
 app.get("/", function(req, res) {
   res.redirect("/posts");
 });
+
 //redirects to here the actual list of articles including edit/add/delete/COMMENT
 app.get("/posts", function(req, res) {
   db.all("SELECT * FROM posts;", function(err, dataStoredInPosts) {
     if (err) console.log(err);
     else {
       var pTable = dataStoredInPosts; //console.log(pTable);
-      db.all("SELECT * FROM comments", function(err, dataInComments) {
+      db.all("SELECT * FROM cats", function(err, categsdata) {
         if (err) console.log(err);
         else {
-          var cData = dataInComments;
-          console.log(cData);
-          res.render("index.ejs", { //sets data retrieved as "posts"
-            posts: pTable,
-            comments: cData
+          var cData = categsdata;
+          db.all("SELECT * FROM comments", function(err, dataInComments) {
+            if (err) console.log(err);
+            else {
+              var mData = dataInComments;
+              console.log(mData);
+              res.render("index.ejs", { //sets data retrieved as "posts"
+                posts: pTable,
+                comments: mData,
+                cats: cData,
+              });
+            }
           });
         }
       });
     }
   });
 });
-
-app.get("/comments", function(req, res) {
-  db.all("SELECT * FROM comments;", function(err, dataInComments) {
+app.get("/cat/:id", function(req, res) {
+  //for authentication thing...
+  db.all("SELECT * FROM users;", function(err, usersData) {
     if (err) console.log(err);
     else {
-      var aCom = dataInComments;
+      var uD = usersData;
+      //What's the info for user who wrote this cat...
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.id, function(err, catData) {
+        if (err) console.log(err);
+        else {
+          var cD = catData;
+          //What's the info for user who wrote this post.
+          db.all("SELECT * FROM posts INNER JOIN users ON posts.userID=users.id WHERE posts.catID = (?);", req.params.id, function(err, postsData) {
+            if (err) console.log(err);
+            else {
+              var pD = postsData;
+              console.log(postsData);
+              var error = {
+                text: "oops"
+              };
+              res.render("showCat.ejs", {
+                cat: cD,
+                posts: pD,
+                users: uD,
+                error: error,
+              });
+            }
+          });
+        }
+      });
     }
   });
 });
+//User clicks to add new cats..
+app.get("/cats/add", function(req, res) {
+  db.all("SELECT * FROM users;", function(err, usersData) {
+    var uD = usersData;
+    var error = {
+      text: "Verifying..."
+    };
+    res.render("addCats.ejs", {
+      users: uD,
+      error: error
+    });
+  });
+});
+//User got password wrong?
+app.get("/cats/add/error", function(req, res) {
+  db.all("SELECT * FROM users;", function(err, usersData) {
+    var uD = usersData;
+    var error = {
+      text: "Nope!"
+    };
+    res.render("addCats.ejs", {
+      users: uD,
+      error: error
+    });
+  });
+});
+//upon Request to make a new CATEGORY!
+app.post("/cats", function(req, res) {
+  console.log(req.body);
+  db.get("SELECT * FROM users WHERE id= (?)", req.body.true, function(err, udata) {
+    console.log(udata);
+    if (req.body.pw === udata.password) {
+      db.run("INSERT INTO cats (Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC) VALUES (?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ctitle, req.body.Cbody, req.body.CimageUrl, req.body.true, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+        if (err) console.log(err);
+        else res.redirect("/");
+      });
+    } else {
+      res.redirect("/cats/add/error");
+    }
+  });
+});
+
+
 //upon request of adding a new article is made.
 app.post("/posts", function(req, res) {
   var textBody = req.body.body,
     title = req.body.title,
     imageUrl = req.body.imageUrl,
     user = 1; //req.body.user;
-  db.run("INSERT INTO posts (title, body, imageUrl, userID, vote, created_at) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", title, textBody, imageUrl, user, function(err, data) {
+  db.run("INSERT INTO posts (title, body, imageUrl, userID, vote, created_at) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP);", title, textBody, imageUrl, user, function(err, data) {
     if (err) console.log(err);
     else { //console.log(data);
       res.redirect("/posts/");
@@ -70,8 +145,11 @@ app.post("/posts", function(req, res) {
 });
 
 //Upon clicking on add link for blogposts...
-app.get("/post/add", function(req, res) {
-  res.render("add.ejs");
+app.get("cat/:id/post/add", function(req, res) {
+  var catID = req.params.id
+  res.render("add.ejs", {
+    cat: catID
+  });
 });
 
 //Upon viewing actual blogpost
@@ -138,12 +216,12 @@ app.get("/post/:id/edit", function(req, res) {
     }
   });
 });
-//adding a comment to a particular article... To do this I will require a simple form which allows someone to post to a given postID. There will then have to be an associated comments table in the same database. When someone writes a comment to a particular post it will have to update that comment's PostID (much like an author's ID would appear on the books description) that comment's body (and title in some blogs but usually not...) that comment's user..It should have an automatically generated timestamp. Once a comment is posted to a particular article IF any comments exists they must be displayed on that post's page (along with the user, title, timestamp). Ideally the homepage where all the articles are would have a link with "0 comments" or more written. By clicking on that page the user is directed to: post/:id/comments/ (Ideally there woulde only one page which would allow editing or deleting of all the comments. This may be achieved by having a textbody editor appear for each comment who's postID matches the req.params.id.) In conclusion comments require the following: (id, tag, body, author, postID-set by looking at id of comments written). The count of comments associated with a specific blogpost may be achieved by comments.withpostID(?).length. 
+//upon adding a comment to a post.
 app.post("/post/:id/", function(req, res) {
   var comID = req.params.id;
   console.log(comID);
   console.log(req.body.title + req.body.userID + req.body.body);
-  db.run("INSERT INTO comments (title, userID, body, postID, vote, created_at) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.title, req.body.userID, req.body.body, comID, function(err, data) {
+  db.run("INSERT INTO comments (Mtitle, userID, Mbody, postID, Mvote, Mcreated_at) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.title, req.body.userID, req.body.body, comID, function(err, data) {
     if (err) console.log(err);
     else {
       console.log(data);
@@ -151,19 +229,38 @@ app.post("/post/:id/", function(req, res) {
     }
   });
 });
+//upon click on an upvote:
+app.put("/user/:id/vote", function(req, res) {
+  console.log("This is the body" + JSON.stringify(req.body));
+  console.log()
+});
 //upon click on edit this article Source: (index/show) Leads:(Home, Delete, Edit)
-app.put("/post/:id/", function(req, res) {
-  var editID = req.params.id;
+app.put("cat/:cid/post/:id/", function(req, res) {
+  console.log(req.body);
+  var editID = parseInt(req.params.id, 10);
   var textBody = req.body.body;
   var title = req.body.title;
   var imageUrl = req.body.imageUrl;
-  db.get("UPDATE posts SET title = (?), body = (?), imageUrl= (?) WHERE id= (?)", title, textBody, imageUrl, editID, function(err, data) {
+  //***IF NOT REJECTED FOR AUTHENTICATION!
+  db.get("UPDATE posts SET Ptitle = (?), Pbody = (?), PimageUrl= (?) WHERE id= (?)", title, textBody, imageUrl, editID, function(err, data) {
     if (err) console.log(err);
     else console.log(data);
     res.redirect("/post/" + req.params.id);
   });
 });
-
+//upon click of edit these comments!*******
+app.get("/post/:id/comments", function(req, res) {
+  var postid = parseInt(req.params.id, 10);
+  db.all("SELECT * IN comments WHERE postID=(?)", postid, function(err, dataComments) {
+    if (err) console.log(err);
+    else {
+      res.render("editComs.ejs", {
+        com: dataComments
+      });
+    }
+  });
+});
+//UPON Submitting the EDIT COMMENT FORM!
 app.put("/post/:id/comment/", function(req, res) {
   var comID = parseInt(req.body.id, 10),
     postID = parseInt(req.params.id, 10),

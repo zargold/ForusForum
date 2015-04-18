@@ -1,6 +1,12 @@
 <%include ./partials/header%>
-<%include ./partials/footer%>
-    <h2> Your Blog Posts </h2>
+    <h2> All Feed! </h2>
+    <div class="topcat">
+      <ul class="cats">
+      <%cats.forEach(function(cat){%>
+        <li class="catslist"><a href="/cat/<%=cat.id%>"><%-cat.Ctitle%><span class="created_at"><%-cat.created_atC%></span></a></li>
+      <%});%>
+      </ul>
+    </div>
     <ol>
       <% posts.forEach(function(key){ %>
       <li> <div><a href="cat/<%=key.catID%>/post/<%=key.id%>"><%-key.title%> <strong style="font-size:0.65em">(updated: <%-key.updated_at%>)</strong></a>
@@ -9,13 +15,5 @@
       </form></li>
       <%});%>
     </ol>
-    <a href="/post/add">Write a New Post!</a>
-    <ol>
-      <form method="POST" action="/posts">
-        <li><label>Add a Title:<br></label><input type="text" name="title" placeholder="10 things I love about You!"></li>
-        <li><label>Add the Body:<br /></label><textarea rows="10" cols="50" name="body" placeholder="Wow I just found the best blog edittor evAr and it is so 1337!"></textarea></li>
-        <li><label>Add an image URL:<br></label><input type="text" name="imageUrl" placeholder="images.google.com/search/coolestPicEvar.jpg"></li>
-        <li><label> Ensure Everything looks good: )<br></label>
-        <span><input type="submit" value="Confirm"></li></span>
-      </form>  
-    </ol>
+
+<%include ./partials/footer%>
