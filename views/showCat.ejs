@@ -67,6 +67,16 @@
     </div>
     </form>
     <div> 
+    <%if(posts.length<1){%>
+      <div>
+      <span class="delete">
+        <p> There are no posts here!
+        <form method="POST" action="/cat/<%=posts.catID%>?_method=DELETE">
+        <input type="submit" name= "delete" value="Delete Category">
+        </form></p>
+      </span>
+      </div>
+      <%}else{%>
     <ol>
       <% posts.forEach(function(key){ %>
       <li>
@@ -81,16 +91,14 @@
       </li>
       <%});%>
     </ol>
+    <%}%>
+    <a href="/<%=cat.id%>/post/add"> Add a Post!</a>
     </div>
     </main>
-    <div>
-    <ul>
-    <li><span class="editCat"><a href="/cat/<%=cat.id%>/edit"> Edit this Category!</a></span></li>
-      <li><form method="POST" action="/post/<%=cat.id%>?_method=DELETE">
-      <input type="submit" name= "delete" value="Delete this Category">
-      </form></li>
-    <li><a href="/"> See All Posts</a></li>
-    <li><a href="/post/add"> Add another Post</a></li></span>
+    <div class="topcat">
+    <ul class="cats">
+      <li><a href="/cat/<%=cat.id%>/edit">Edit Category</a></li>
+      <li><a href="/post/add"> Add another Post</a></li>
     </ul>
     </div>
 <%include ./partials/footer%>

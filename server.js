@@ -65,6 +65,7 @@ app.get("/cat/:id", function(req, res) {
         if (err) console.log(err);
         else {
           var cD = catData;
+          console.log(cD);
           //What's the info for user who wrote this post.
           db.all("SELECT * FROM posts INNER JOIN users ON posts.userID=users.id WHERE posts.catID = (?);", req.params.id, function(err, postsData) {
             if (err) console.log(err);
