@@ -8,7 +8,6 @@ main {
   display: block;
   margin: 4px 1%;
   list-style-type: none;
-
 }
 main p {
   border: rgba(220,0,100,0.25) solid 1px;
@@ -117,7 +116,7 @@ div {
   width: 85%;
 }
 div input {
-  padding: 0.1%;
+  padding: 0.05%;
 }
 span ul {
   min-width: 100%;
@@ -162,8 +161,9 @@ span input {
   font-size:80%;
 }
 .vote input{
-  max-width:48px;
-  max-height:40px;
+  max-width: 44px;
+  width: 40px;
+  max-height: 40px;
   background: rgba(180, 0, 100, 0.5);
 }
 .avatar{
@@ -179,24 +179,55 @@ span input {
   background:rgba(250, 70, 0, 0.25);
 }
 .postTit, .postBod{
-  border: 4px solid rgba(25, 255, 175, 0.25);
+  border: 4px solid rgba(59, 231, 174, 0.25);
 }
 .postTit a, .postMini a{
-  color: rgba(25, 255, 175, 1);
+  color: rgba(29, 200, 150, 1);
+}
+.postTit{
+  color:rgba(59, 231, 174,1);
+}
+.postBod{
+  background: rgba(59, 231, 174, 0.15);
 }
 .postInfo, .postMini{
   margin: 5px 0px 0px 0px;
-  background: rgba(25, 255, 175, 0.08);
+  background: rgba(59, 231, 174, 0.15);
 }
 .singleCom{
   min-width:92%;
+  background: -webkit-linear-gradient(rgba(140, 32, 220, 0.5), rgba(110, 0, 175, 0.5));
+  background: -o-linear-gradient(rgba(140, 32, 220, 0.5), rgba(110, 0, 175, 0.5));
+  background: -moz-linear-gradient(rgba(140, 32, 220, 0.5), rgba(110, 0, 175, 0.5));
+  background: linear-gradient(rgba(140, 32, 220, 0.5), rgba(110, 0, 175, 0.5));
+}
+.userSelect{
+  font-size: 2em;
+  min-width: 250px;
+  margin: 10px;
+  text-indent: 1px;
 }
 #user input{
-  background:rgba(2, 2, 180, 0.5);
+  background: rgba(40, 150, 211, 0.75);
+  background: linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
+  background: -webkit-linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
+  background: -moz-linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
+  min-width: 60px;
+  max-width: 60px;
 }
 #post input{
-  background: rgba(25, 255, 175, 0.5);
+  background: rgba(40, 211, 150, 0.75);
+  background: linear-gradient(rgb(59, 231, 174), rgb(0, 204, 136));
+  background: -webkit-linear-gradient(rgb(59, 231, 174), rgb(0, 204, 136));
+  background: -moz-linear-gradient(rgb(59, 231, 174), rgb(0, 204, 136));
+  min-width: 60px;
+  max-width: 60px;
 }
 #cat input{
-  background: rgba(250, 70, 0, 0.5);
+  background: rgba(211, 150, 10, 0.75);
+  background: linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
+  background: -webkit-linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
+  background: -moz-linear-gradient(rgb(251, 144, 50), rgb(220, 110, 0));
+  min-width: 60px;
+  max-width: 60px;
 }

@@ -4,7 +4,7 @@
 </head>
 
     <form action="/user/<%=post.userID%>_method=PUT" method="post">
-      <select name="user" required>
+      <select class="userSelect" name="user" required>
       <%for(var i=0;i <users.length;i++){%>
       <label> Your User</label>
       <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
