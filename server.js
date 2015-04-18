@@ -300,6 +300,15 @@ app.delete("/post/:id", function(req, res) {
     }
   });
 });
+//Upon click of delete button for a specific article.
+app.delete("/cat/:id", function(req, res) {
+  db.get("DELETE FROM cats WHERE ID= (?)", req.params.id, function(err, deleted) {
+    if (err) console.log(err);
+    else {
+      res.redirect("/");
+    }
+  });
+});
 
 app.listen(port, function() {
   console.log("listening on Port: " + port);
