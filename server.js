@@ -130,6 +130,27 @@ app.post("/cats", function(req, res) {
     }
   });
 });
+//Upon clicking on add link and you are wrong.
+app.get("/cat/:id/post/add/error", function(req, res) {
+  var catID = req.params.id
+  db.all("SELECT * FROM users;", function(err, uData) {
+    if (err) console.log(err);
+    else {
+      var uD = uData;
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
+        var cD = catData;
+        var error = {
+          text: "Nope!"
+        };
+        res.render("addPost.ejs", {
+          cat: cD,
+          users: uD,
+          error: error,
+        });
+      })
+    }
+  });
+});
 
 //Upon clicking on add link for blogposts...
 app.get("/cat/:id/post/add", function(req, res) {
@@ -152,44 +173,50 @@ app.get("/cat/:id/post/add", function(req, res) {
     }
   });
 });
-//Upon clicking on add link and you are wrong.
-app.get("/cat/:id/post/add", function(req, res) {
-  var catID = req.params.id
-  db.all("SELECT * FROM users;", function(err, uData) {
-    if (err) console.log(err);
-    else {
-      var uD = uData;
-      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
-        var cD = catData;
-        var error = {
-          text: "Nope!"
-        };
-        res.render("addPost.ejs", {
-          cat: cD,
-          users: uD,
-          error: error,
-        });
-      })
-    }
-  });
-});
+
 // upon request of adding a new article is made.
-app.post("cat/:id/post/add", function(req, res) {
+app.post("/cat/:id/post/add", function(req, res) {
+  console.log(req.params.id);
   db.get("SELECT * FROM users WHERE id= (?)", req.body.true, function(err, udata) {
     console.log(udata);
     if (req.body.pw === udata.password) {
-      db.run("INSERT INTO (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.true, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+      console.log("verified pw");
+      db.run("INSERT INTO posts (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.tTL, req.body.sticky, req.body.true, req.params.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
         if (err) console.log(err);
-        else res.redirect("/");
+        else {
+          console.log("added");
+          res.redirect("/");
+        }
       });
     } else {
-      res.redirect("/cat/" + req.params.id + "/add/error");
+      res.redirect("/cat/" + req.params.id + "/post/add/error");
     }
   });
 });
 
-
 //Upon clicking: edit this particular blogpost (source:index,view)
+
+//upon adding a comment to a post.
+app.post("/cat/:cid/post/:id", function(req, res) {
+  var comID = req.params.id;
+  console.log(comID);
+  console.log(req.body);
+  db.get("SELECT password FROM users WHERE id =(?)", req.body.true, function(err, uPW) {
+    console.log(uPW);
+    if (uPW.password === req.body.pw) {
+      db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, req.body.true, req.body.mBody, comID, function(err, data) {
+        if (err) console.log(err);
+        else {
+          console.log(data);
+          res.redirect("/cat/" + req.params.cid + "/post/" + comID);
+        }
+      });
+    } else {
+      res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
+    }
+  });
+});
+
 app.get("/post/:id/edit", function(req, res) {
   var editID = req.params.id;
   console.log(editID);
@@ -202,25 +229,43 @@ app.get("/post/:id/edit", function(req, res) {
         else {
           var cData = dataInComments;
           console.log(cData);
+          var error = {
+            text: "good",
+          };
           res.render("editPost.ejs", {
             post: cPost,
-            comments: cData
+            comments: cData,
+            error: error
           });
         }
       });
     }
   });
 });
-//upon adding a comment to a post.
-app.post("/post/:id/", function(req, res) {
-  var comID = req.params.id;
-  console.log(comID);
-  console.log(req.body.title + req.body.userID + req.body.body);
-  db.run("INSERT INTO comments (Mtitle, userID, Mbody, postID, Mvote, Mcreated_at) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.title, req.body.userID, req.body.body, comID, function(err, data) {
+//When user clicks on EDIT THIS POST
+app.get("cat/:cid/post/:id/edit", function(req, res) {
+  var editID = req.params.id;
+  var catID=req.params.cid;
+  console.log(editID);
+  db.get("SELECT * FROM posts WHERE id= (?);", editID, function(err, currentData) {
     if (err) console.log(err);
     else {
-      console.log(data);
-      res.redirect("/post/" + comID);
+      var cPost = currentData;
+      db.all("SELECT * FROM comments WHERE postID=(?);", editID, function(err, dataInComments) {
+        if (err) console.log(err);
+        else {
+          var cData = dataInComments;
+          console.log(cData);
+          var error = {
+            text: "Nope!"
+          };
+          res.render("editPost.ejs", {
+            post: cPost,
+            comments: cData,
+            error: error,
+          });
+        }
+      });
     }
   });
 });
@@ -299,11 +344,15 @@ app.get("/cat/:cid/post/:id", function(req, res) {
                 else {
                   var mData = dataInComment;
                   console.log(cData);
+                  var error = {
+                    text: "Yep!",
+                  };
                   res.render("showCatPosts.ejs", {
                     cat: cData,
                     post: pData,
                     comments: mData,
                     users: userlist,
+                    error: error
                   });
                 }
               });
@@ -314,9 +363,54 @@ app.get("/cat/:cid/post/:id", function(req, res) {
     }
   });
 });
-app.delete("/post/:id/comment/", function(req, res) {
+app.get("/cat/:cid/post/:id/error", function(req, res) {
+  var postId = req.params.id;
+  //console.log(postId);
+  //What is the information about the user who wrote this post?
+  db.all("SELECT * FROM users;", function(err, udata) {
+    if (err) console.log(err);
+    else {
+      var userlist = udata;
+      console.log("this is UserLIST" + userlist);
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
+        if (err) console.log(err);
+        else {
+          var cData = dataInCat;
+          console.log(cData);
+          db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
+            if (err) console.log(err);
+            else {
+              var pData = dataInPost;
+              console.log(pData);
+              //What is the user's info for these comments?
+              db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
+                if (err) console.log(err);
+                else {
+                  var mData = dataInComment;
+                  console.log(cData);
+                  var error = {
+                    text: "Nope!"
+                  };
+                  res.render("showCatPosts.ejs", {
+                    cat: cData,
+                    post: pData,
+                    comments: mData,
+                    users: userlist,
+                    error: error
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
+app.delete("/post/:id/comment/:mid", function(req, res) {
   var postID = req.params.id,
-    comID = req.body.id;
+    comID = req.body.mid;
   db.get("DELETE FROM comments WHERE ID = (?);", comID, function(err, deleted) {
     if (err) console.log(err);
     else {

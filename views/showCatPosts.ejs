@@ -1,16 +1,18 @@
 <%include ./partials/header%>
-<head>
-  <title> <%-post.Ptitle%></title>
-</head>
-    <form method="POST" action="/user/<%=post.userID%>/vote?_method=PUT">
+    <form method="POST" action="/users/vote?_method=PUT">
       <select class="userSelect" name="user" required>
       <%for(var i=0;i <users.length;i++){%>
       <label> Your User</label>
       <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
       &nbsp; <input type="password" name="pw" placeholder="your Password" required>
-      <input type="hidden" name="true" value="<%-users[i].password%>">
+      <input type="hidden" name="true" value="<%-users[i].id%>">
     <%}%>
     </select>
+    <%if(error.text==="Nope!"){%>
+      <span class="error">
+      &#9756;
+      </span>
+    <%}%>
     <br />
     <div class="cat">
     <h4><a class="catlink" href="/cat/<%-post.catID%>/"><%-cat.Ctitle%></a><span class="vote" id="cat"> &nbsp;
@@ -70,6 +72,11 @@
     </div>
 
     <h4>Comments</h4>
+    <%if (comments.length<1){%>
+      <div class="comFull">
+      <p> Be the first to Comment!</p>
+      </div>
+    <%}else{%>
     <div class="comFull">
     <% comments.forEach(function(key){ %>
       <div class="singleCom">
@@ -93,38 +100,49 @@
         <p><%- key.bodyM %></p>
       </div>
     <%});%>
-    </div>
-    </div>
     </form>
+    </form>
+    </form>
+    </form>
+    </form>
+    <%}%>
     <h3>Add your own<br></h3>
     <div>
-      <form method="POST" action="/post/<%=post.id%>">
-        <ul>
+      <form method="POST" action="/cat/<%=cat.id%>/post/<%=post.id%>">
+      <ul>
         <select class="userSelect" name="user" required>
-          <li>
+        <li>
           <%for(var i=0;i <users.length;i++){%>
           <label> Your User</label>
           <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
           &nbsp; 
-          <span id="password"><input type="password" name="pw" placeholder="your Password" required></span>
-      <input type="hidden" name="true" value="<%-users[i].id%>">
-    <%}%></li>
-    </select>
-          <li class="titleCommentBuild">
+          <span id="password"><input type="password" name="pw" placeholder="your Password"></span>
+          <input type="hidden" name="true" value="<%-users[i].id%>">
+            <%}%>
+        </li>
+        </select>
+        <%if(error.text==="Nope!"){%>
+        <span class="error">
+        &#9756;
+        </span>
+        <%}%>
+        <li class="mBuild">
             <label>Title:<br></label>
-            <input type="text" placeholder= "Great Work | Typo | Funny" name="tag">
-          </li>
-          <li>
+            <input type="text" placeholder= "Great Work | Typo | Funny" name="mTitle" maxlength="25">
+        </li>
+        <li class="mBuild">
             <label>Comment:<br></label>
-            <textarea rows="5" cols="55" placeholder="This is a really cool post, but an even cooler WEBSITE!" name="body"></textarea>
-          </li>
-          <li>
+            <textarea rows="5" cols="55" placeholder="This is a really cool post, but an even cooler WEBSITE!" name="mBody"></textarea>
+        </li>
+        <li class="mBuild">
             <span><input type="submit" value="Send"></span>
-          </li>
-        </ul>
+        </li>
+      </ul>
       </form>
     </div>
     </main>
+    </div>
+    </div>
     <ul>
       <span><li><a href="/post/<%=post.id%>/edit"> Edit this Post! </a></li>
       <li><form method="POST" action="/post/<%=post.id%>?_method=DELETE">

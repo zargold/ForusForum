@@ -63,7 +63,7 @@
     </div>
     <div class="adding">
     </form>
-      <form method="POST" action="/cats">
+      <form method="POST" action="/cat/<%-cat.id%>/post/add">
       <select class="userSelect" name="user" required>
       <%for(var i=0;i <users.length; i++){%>
       <label> Your User</label>
@@ -88,9 +88,9 @@
         <input class="tags" type="text" name="tagC" placeholder="Rainbows">
         </li>
         <li><label> Add a time to live</label>
-        <input class="TTL" type="number" name="TTL" min="1" max="600"></li>
+        <input class="TTL" type="number" name="tTL" min="1" max="600"></li>
         <li><label> Add Stickiness</label>
-        <input class="Sticky" type="number" name="Sticky" min="1" max="600"></li>
+        <input class="Sticky" type="number" name="sticky" min="1" max="600"></li>
         <input type="hidden" name="cat" value="<%cat.id%>"
         <span><input type="submit" value="Confirm"></li></span>
       </form>  
