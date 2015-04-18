@@ -67,7 +67,7 @@ textarea:hover {
   z-index: 10;
 }
 ul {
-  padding: -1% -1% -1% -1%;
+  padding: 0%;
   margin: 0 auto;
   display: inline-block;
   list-style-type: none;
@@ -320,4 +320,8 @@ img{
   background: -moz-linear-gradient(rgba(140, 32, 220, 1), rgba(110, 0, 175, 1));
   min-width: 60px;
   max-width: 200px;
+}
+
+#comment input :hover,#post input :hover, #user input :hover, #cat input :hover {
+  cursor:default;
 }

@@ -54,6 +54,7 @@ app.get("/posts", function(req, res) {
     }
   });
 });
+//Want to see a specific Category's page.
 app.get("/cat/:id", function(req, res) {
   //for authentication thing...
   db.all("SELECT * FROM users;", function(err, usersData) {
@@ -130,70 +131,63 @@ app.post("/cats", function(req, res) {
   });
 });
 
-
-//upon request of adding a new article is made.
-app.post("/posts", function(req, res) {
-  var textBody = req.body.body,
-    title = req.body.title,
-    imageUrl = req.body.imageUrl,
-    user = 1; //req.body.user;
-  db.run("INSERT INTO posts (title, body, imageUrl, userID, vote, created_at) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP);", title, textBody, imageUrl, user, function(err, data) {
-    if (err) console.log(err);
-    else { //console.log(data);
-      res.redirect("/posts/");
-    }
-  });
-});
-
 //Upon clicking on add link for blogposts...
-app.get("cat/:id/post/add", function(req, res) {
+app.get("/cat/:id/post/add", function(req, res) {
   var catID = req.params.id
-  res.render("add.ejs", {
-    cat: catID
-  });
-});
-
-//Upon viewing actual blogpost
-app.get("/cat/:cid/post/:id", function(req, res) {
-  var postId = req.params.id;
-  //console.log(postId);
-  //What is the information about the user who wrote this post?
-  db.all("SELECT * FROM users;", function(err, udata) {
+  db.all("SELECT * FROM users;", function(err, uData) {
     if (err) console.log(err);
     else {
-      var userlist = udata;
-      console.log("this is UserLIST" + userlist);
-      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
-        if (err) console.log(err);
-        else {
-          var cData = dataInCat;
-          console.log(cData);
-          db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
-            if (err) console.log(err);
-            else {
-              var pData = dataInPost;
-              console.log(pData);
-              //What is the user's info for these comments?
-              db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
-                if (err) console.log(err);
-                else {
-                  var mData = dataInComment;
-                  console.log(cData);
-                  res.render("showCatPosts.ejs", {
-                    cat: cData,
-                    post: pData,
-                    comments: mData,
-                    users: userlist,
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
+      var uD = uData;
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
+        var cD = catData;
+        var error = {
+          text: "Good"
+        };
+        res.render("addPost.ejs", {
+          cat: cD,
+          users: uD,
+          error: error,
+        });
+      })
     }
   });
 });
+//Upon clicking on add link and you are wrong.
+app.get("/cat/:id/post/add", function(req, res) {
+  var catID = req.params.id
+  db.all("SELECT * FROM users;", function(err, uData) {
+    if (err) console.log(err);
+    else {
+      var uD = uData;
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
+        var cD = catData;
+        var error = {
+          text: "Nope!"
+        };
+        res.render("addPost.ejs", {
+          cat: cD,
+          users: uD,
+          error: error,
+        });
+      })
+    }
+  });
+});
+// upon request of adding a new article is made.
+app.post("cat/:id/post/add", function(req, res) {
+  db.get("SELECT * FROM users WHERE id= (?)", req.body.true, function(err, udata) {
+    console.log(udata);
+    if (req.body.pw === udata.password) {
+      db.run("INSERT INTO (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.true, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+        if (err) console.log(err);
+        else res.redirect("/");
+      });
+    } else {
+      res.redirect("/cat/" + req.params.id + "/add/error");
+    }
+  });
+});
+
 
 //Upon clicking: edit this particular blogpost (source:index,view)
 app.get("/post/:id/edit", function(req, res) {
@@ -236,7 +230,7 @@ app.put("/user/:id/vote", function(req, res) {
   console.log()
 });
 //upon click on edit this article Source: (index/show) Leads:(Home, Delete, Edit)
-app.put("cat/:cid/post/:id/", function(req, res) {
+app.put("/cat/:cid/post/:id/", function(req, res) {
   console.log(req.body);
   var editID = parseInt(req.params.id, 10);
   var textBody = req.body.body;
@@ -279,6 +273,47 @@ app.put("/post/:id/comment/", function(req, res) {
   });
 });
 
+// Upon viewing actual blogpost
+app.get("/cat/:cid/post/:id", function(req, res) {
+  var postId = req.params.id;
+  //console.log(postId);
+  //What is the information about the user who wrote this post?
+  db.all("SELECT * FROM users;", function(err, udata) {
+    if (err) console.log(err);
+    else {
+      var userlist = udata;
+      console.log("this is UserLIST" + userlist);
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
+        if (err) console.log(err);
+        else {
+          var cData = dataInCat;
+          console.log(cData);
+          db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
+            if (err) console.log(err);
+            else {
+              var pData = dataInPost;
+              console.log(pData);
+              //What is the user's info for these comments?
+              db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
+                if (err) console.log(err);
+                else {
+                  var mData = dataInComment;
+                  console.log(cData);
+                  res.render("showCatPosts.ejs", {
+                    cat: cData,
+                    post: pData,
+                    comments: mData,
+                    users: userlist,
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+});
 app.delete("/post/:id/comment/", function(req, res) {
   var postID = req.params.id,
     comID = req.body.id;

@@ -1,7 +1,68 @@
 <%include ./partials/header%>
-<%include ./partials/footer%>
-<%include ./partials/header%>
-    <ol>
+    <form method="POST" action="/cats">
+      <select class="userSelect" name="user" required>
+      <%for(var i=0;i <users.length; i++){%>
+      <label> Your User</label>
+      <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
+      &nbsp; <input type="password" name="pw" placeholder="your Password" required>
+      <input type="hidden" name="true" value="<%-users[i].id%>">
+        <%}%>
+        </select>
+        
+        <%if(error.text==="Nope!"){%>
+        <span class="error">
+        &#9756;
+        <%}%>
+        </span>
+      <div class="cat">
+        <h2><%-cat.Ctitle%></h2>
+      </div>
+      <div class="catInfo">
+        &#164;<strong>
+        <a class="taglink" href="/tag/<%=cat.tagA%>"> 
+        <%-cat.tagA%>
+        </a>
+        </strong>
+        &nbsp;<strong>
+        <a class="taglink" href="/tag/<%=cat.tagB%>">
+        <%-cat.tagB%> 
+        </a>
+        </strong>
+         &nbsp;<strong>
+         <a class="taglink" href="/tag/<%=cat.tagC%>"> <%-cat.tagC%> </a>
+         </strong>
+         <span class="created_at">&nbsp;Created: <%-cat.created_atC%></span>
+        <span class="vote" id="cat"> &nbsp;
+        <label>Category: </label>
+        <input type="hidden" name="category" value="<%=cat.id%>">
+        <input type="submit" name="up" value="&#8657;">
+        &nbsp;<%-cat.Cvote%>&nbsp;
+        <input type="submit" name="down" value="&#8659;">
+        </span>
+    </div>
+    <div class="author">
+      Originator: <span class="author"><a class="authlink" href="user/<%=cat.userID%>/"><%-cat.userN%></a></span> &nbsp; <span class="avatar">(<%-cat.avatar%>)</span> &nbsp;
+      <span class="created_at"> &nbsp;Created: <%-cat.created_atU%></span>
+      <span class="vote" id="user"> &nbsp;
+        <label>Rep: </label>
+        <input type="hidden" name="user" value="<%=cat.userID%>">
+        <input type="submit" name="up" value="&#8657;">
+        &nbsp;<%-cat.Uvote%>&nbsp;
+        <input type="submit" name="down" value="&#8659;">
+         </span>
+    </div>
+    <div class="cat">
+    <img src="<%-cat.CimageUrl%>">
+    <p class="body"><%-cat.Cbody%></p>
+    <div class="catInfo">
+    <span class="editCat"><a href="/cat/<%=cat.id%>/edit"> Edit this Category!</a></span>
+    <% if(cat.updated_atC !==null){%>
+        <span class="created_at">Updated: <%-post.updated_atP%>
+        <%}%>
+    </div>
+    </div>
+    <div class="adding">
+    </form>
       <form method="POST" action="/cats">
       <select class="userSelect" name="user" required>
       <%for(var i=0;i <users.length; i++){%>
@@ -11,21 +72,28 @@
       <input type="hidden" name="true" value="<%-users[i].id%>">
         <%}%>
         </select>
-        <span class="error">
+      
         <%if(error.text==="Nope!"){%>
+        <span class="error">
         &#9756;
-        <%}%>
         </span>
-        <li><label>Add a Title:<br></label><input type="text" name="Ptitle" placeholder="Things Related to Nyan Cats!"></li>
-        <li><label>Add the Description:<br /></label><textarea rows="10" cols="50" name="Pbody" placeholder="Nyan cats are really shiny lets collect images of them and talk about how cool they ARE!"></textarea></li>
+        <%}%>
+        <li><label>Add a Title:<br></label><input type="text" name="Ptitle" placeholder="Nyan Cats are the sweetest!"></li>
+        <li><label>Add the Description:<br /></label><textarea rows="10" cols="50" name="Pbody" placeholder="I don't blow things up often, but I once had a collection of nyan cat GIFs go up in flames, there were no survivors!"></textarea></li>
         <li><label>Add an image URL:<br></label><input type="text" name="PimageUrl" placeholder="images.google.com/search/coolestNyanPatPicEvar.jpg"></li>
-        <li><label> Ensure Everything looks good: )<br></label>
+        <li><label> Ensure Everything looks good:)<br></label>
         <li class="tagAdd"><label> Add Tags!<br /></label>
         <input class="tags" type="text" name="tagA" placeholder="Cats">
         <input class="tags" type="text" name="tagB" placeholder="Pijamas">
         <input class="tags" type="text" name="tagC" placeholder="Rainbows">
         </li>
+        <li><label> Add a time to live</label>
+        <input class="TTL" type="number" name="TTL" min="1" max="600"></li>
+        <li><label> Add Stickiness</label>
+        <input class="Sticky" type="number" name="Sticky" min="1" max="600"></li>
+        <input type="hidden" name="cat" value="<%cat.id%>"
         <span><input type="submit" value="Confirm"></li></span>
       </form>  
     </ol>
+    </div>
 <%include ./partials/footer%>
