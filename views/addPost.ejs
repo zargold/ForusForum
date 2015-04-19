@@ -51,13 +51,13 @@
     <div class="catInfo">
     <span class="editCat"><a href="/cat/<%=cat.id%>/edit"> Edit this Category!</a></span>
     <% if(cat.updated_atC !==null){%>
-        <span class="created_at">Updated: <%-post.updated_atP%>
+        <span class="created_at">Updated: <%-cat.updated_atC%>
         <%}%>
     </div>
     </div>
     <div class="adding">
     </form>
-      <form method="POST" action="/cat/<%-cat.id%>/post/add">
+      <form method="POST" action="/cat/<%=spID.number %>/post/add">
       <label> Your User</label>
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>

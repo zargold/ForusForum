@@ -80,6 +80,58 @@ app.get("/cat/add/error", function(req, res) {
     });
   });
 });
+//Upon clicking on add link for blogposts...
+app.get("/cat/:id/post/add", function(req, res) {
+  var catID = req.params.id;
+  var specificID = {
+    number: catID
+  };
+  db.all("SELECT * FROM users;", function(err, uData) {
+    if (err) console.log(err);
+    else {
+      var uD = uData;
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
+        var cD = catData;
+        var error = {
+          text: "Good"
+        };
+        res.render("addPost.ejs", {
+          cat: cD,
+          users: uD,
+          error: error,
+          spID: specificID
+        });
+      });
+    }
+  });
+});
+
+//Upon clicking on add link and you are wrong.
+app.get("/cat/:id/post/add/error", function(req, res) {
+  var catID = req.params.id;
+  var specificID = {
+    number: catID
+  };
+  db.all("SELECT * FROM users;", function(err, uData) {
+    if (err) console.log(err);
+    else {
+      var uD = uData;
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
+        var cD = catData;
+        var error = {
+          text: "Nope!"
+        };
+        res.render("addPost.ejs", {
+          cat: cD,
+          users: uD,
+          error: error,
+          spID: specificID
+        });
+      });
+    }
+  });
+});
+
 //Want to see a specific Category's page.
 app.get("/cat/:id", function(req, res) {
   //for authentication thing...
@@ -102,11 +154,15 @@ app.get("/cat/:id", function(req, res) {
               var error = {
                 text: "oops"
               };
+              var specificID = {
+                number: req.params.id
+              };
               res.render("showCat.ejs", {
                 cat: cD,
                 posts: pD,
                 users: uD,
                 error: error,
+                spID:specificID
               });
             }
           });
@@ -277,50 +333,6 @@ app.get("/user/new/e", function(req, res) {
   });
 });
 
-//Upon clicking on add link and you are wrong.
-app.get("/cat/:id/post/add/error", function(req, res) {
-  var catID = req.params.id;
-  db.all("SELECT * FROM users;", function(err, uData) {
-    if (err) console.log(err);
-    else {
-      var uD = uData;
-      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
-        var cD = catData;
-        var error = {
-          text: "Nope!"
-        };
-        res.render("addPost.ejs", {
-          cat: cD,
-          users: uD,
-          error: error,
-        });
-      });
-    }
-  });
-});
-
-//Upon clicking on add link for blogposts...
-app.get("/cat/:id/post/add", function(req, res) {
-  var catID = req.params.id;
-  db.all("SELECT * FROM users;", function(err, uData) {
-    if (err) console.log(err);
-    else {
-      var uD = uData;
-      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
-        var cD = catData;
-        var error = {
-          text: "Good"
-        };
-        res.render("addPost.ejs", {
-          cat: cD,
-          users: uD,
-          error: error,
-        });
-      });
-    }
-  });
-});
-
 //upon click of edit these comments!*******
 app.get("/post/:id/comments", function(req, res) {
   var postid = parseInt(req.params.id, 10);
@@ -460,7 +472,6 @@ app.put("/vote", function(req, res) {
   var direction = 0;
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
     console.log(udata);
-
     if (req.body.pw === udata.password) {
       console.log("verified pw");
       var bodice = [];
@@ -483,7 +494,7 @@ app.put("/vote", function(req, res) {
           else res.redirect("/");
         });
       } else if (votePiece[0] === "post") {
-        db.run("UPDATE posts SET Pvote=Pvote+" + direction + " WHERE created_atP = (?);", votePiece[1], function(err) {
+        db.run("UPDATE posts SET Pvote = Pvote+" + direction + " WHERE created_atP = (?);", votePiece[1], function(err) {
           if (err) console.log(err);
           else res.redirect("/");
         });
