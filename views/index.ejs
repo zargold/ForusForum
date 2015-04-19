@@ -6,14 +6,22 @@
         <li class="catslist"><a href="/cat/<%=cat.id%>"><%-cat.Ctitle%><span class="created_at"><%-cat.created_atC%></span></a></li>
       <%});%>
       </ul>
+      </ul>
     </div>
+    
+    <% if( typeof posts!==undefined){%>
     <ol>
       <% posts.forEach(function(key){ %>
-      <li> <div><a href="cat/<%=key.catID%>/post/<%=key.id%>"><%-key.Ptitle%> <strong style="font-size:0.65em">(updated: <%-key.updated_at%>)</strong></a>
-      <span style="font-size: 0.75em; margin: 5px 0px 0px 0px;"><a href="/post/<%=key.id%>/edit">Edit this</a><form method="POST" action="/post/<%=key.id%>?_method=DELETE">
-      <input type="submit" name= "delete" value="Delete this Post"></div></span>
-      </form></li>
+          <li> <div><a href="cat/<%=key.catID%>/post/<%=key.id%>"><%-key.Ptitle%> <strong style="font-size:0.65em">(updated: <%-key.updated_at%>)</strong></a>
+         <span style="font-size: 0.75em; margin: 5px 0px 0px 0px;"><a href="/post/<%=key.id%>/edit">Edit this</a>
+         <form method="POST" action="/post/<%=key.id%>?_method=DELETE">
+          <input type="submit" name= "delete" value="Delete this Post"></div></span>
+          </form></li>
       <%});%>
+      <%}else{%>
+        No more posts.
     </ol>
-
+      <%}%>
+    
+    <a href="/posts/page/<%=page.num%>"> >View Next Page</a>
 <%include ./partials/footer%>

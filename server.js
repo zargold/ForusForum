@@ -24,15 +24,30 @@ var request = require("request");
 
 //Home page of the Blogger Redirects to list of blogposts
 app.get("/", function(req, res) {
-  res.redirect("/posts");
+  res.redirect("/posts/page/0");
 });
 
 //redirects to here the actual list of articles including edit/add/delete/COMMENT
-app.get("/posts", function(req, res) {
+app.get("/posts/page/:id", function(req, res) {
+  var pagen = parseInt(req.params.id, 10);
+  var starter = parseInt(("" + pagen + 1), 10);
+  var page = {
+    num: pagen + 1
+  };
+  var ender=page.num*10;
+  console.log("This is ENDER"+ender);
+  console.log("THIS IS STARTER=" + starter);
+  console.log("NUMBER STORED IN PAGE=" + page.num);
   db.all("SELECT * FROM posts;", function(err, dataStoredInPosts) {
     if (err) console.log(err);
     else {
-      var pTable = dataStoredInPosts; //console.log(pTable);
+      var pTable = [];
+      for (var i = starter; i <= ender; i++) {
+          if(typeof dataStoredInPosts[i].Ptitle!==null && typeof dataStoredInPosts[i].Ptitle!==undefined)
+            console.log(dataStoredInPosts[0]);
+          pTable.push(dataStoredInPosts[i]);
+      }
+      console.log(pTable);
       db.all("SELECT * FROM cats", function(err, categsdata) {
         if (err) console.log(err);
         else {
@@ -46,6 +61,7 @@ app.get("/posts", function(req, res) {
                 posts: pTable,
                 comments: mData,
                 cats: cData,
+                page: page
               });
             }
           });
@@ -162,7 +178,7 @@ app.get("/cat/:id", function(req, res) {
                 posts: pD,
                 users: uD,
                 error: error,
-                spID:specificID
+                spID: specificID
               });
             }
           });
