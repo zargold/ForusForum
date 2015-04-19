@@ -1,13 +1,7 @@
 <%include ./partials/header%>
-    <form method="POST" action="/users/vote?_method=PUT">
-      <select class="userSelect" name="user" required>
-      <%for(var i=0;i <users.length;i++){%>
       <label> Your User</label>
-      <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
-      &nbsp; <input type="password" name="pw" placeholder="your Password" required>
-      <input type="hidden" name="true" value="<%-users[i].id%>">
-    <%}%>
-    </select>
+      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
+      <input type="password" name="pw" id="PW" placeholder="your Password" required>
     <%if(error.text==="Nope!"){%>
       <span class="error">
       &#9756;
@@ -17,10 +11,10 @@
     <div class="cat">
     <h4><a class="catlink" href="/cat/<%-post.catID%>/"><%-cat.Ctitle%></a><span class="vote" id="cat"> &nbsp;
         <label>Category: </label>
-        <input type="hidden" name="category" value="<%=post.catID%>">
-        <input type="submit" name="up" value="&#8657;">
+        <input class="whatAreWeUpvoting" type="hidden" name="category" value="<%=post.catID%>">
+        <input class="Cup" type="button" name="up" value="&#8657;">
         &nbsp;<%-cat.Cvote%>&nbsp;
-        <input type="submit" name="down" value="&#8659;">
+        <input class="Cdo" type="submit" name="down" value="&#8659;">
          </span>  </span></h4>
     <div class="catInfo">
        &#164;<strong><a class="taglink" href="/tag/<%=cat.tagA%>"> <%-cat.tagA%></a></strong>&nbsp;<strong><a class="taglink" href="/tag/<%=cat.tagB%>"><%-cat.tagB%> </a></strong> &nbsp;<strong><a class="taglink" href="/tag/<%=cat.tagC%>"> <%-cat.tagC%> </a></strong>
@@ -30,9 +24,9 @@
       <span class="vote" id="user"> &nbsp;
         <label>Rep: </label>
         <input type="hidden" name="user" value="<%=cat.userID%>">
-        <input type="submit" name="up" value="&#8657;">
+        <input type="submit" class="Uup" name="up" value="&#8657;">
         &nbsp;<%-cat.Uvote%>&nbsp;
-        <input type="submit" name="down" value="&#8659;">
+        <input type="submit" class="Udo" name="down" value="&#8659;">
          </span>
     </div>
     </div>
@@ -110,17 +104,9 @@
     <div>
       <form method="POST" action="/cat/<%=cat.id%>/post/<%=post.id%>">
       <ul>
-        <select class="userSelect" name="user" required>
-        <li>
-          <%for(var i=0;i <users.length;i++){%>
-          <label> Your User</label>
-          <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
-          &nbsp; 
-          <span id="password"><input type="password" name="pw" placeholder="your Password"></span>
-          <input type="hidden" name="true" value="<%-users[i].id%>">
-            <%}%>
-        </li>
-        </select>
+              <label> Your User</label>
+      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
+      <input type="password" name="pw" id="PW" placeholder="your Password" required>
         <%if(error.text==="Nope!"){%>
         <span class="error">
         &#9756;

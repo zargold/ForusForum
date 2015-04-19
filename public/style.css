@@ -303,9 +303,7 @@ img{
 }
 #password input{
   width: 60%;
-  background: linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
-  background: -webkit-linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
-  background: -moz-linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
+  background: ;
 }
 #cat input{
   background: rgba(211, 150, 10, 0.75);

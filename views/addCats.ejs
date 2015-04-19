@@ -1,14 +1,9 @@
 <%include ./partials/header%>
     <ol>
-      <form method="POST" action="/cats">
-      <select class="userSelect" name="user" required>
-      <%for(var i=0;i <users.length; i++){%>
+      <form method="POST" action="/cat">
       <label> Your User</label>
-      <option value="<%-users[i].userN%>"><%-users[i].userN;%></option>
-      &nbsp; <input type="password" name="pw" placeholder="your Password" required>
-      <input type="hidden" name="true" value="<%-users[i].id%>">
-        <%}%>
-        </select>
+      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
+      <input type="password" name="pw" id="PW" placeholder="your Password" required>
         <%if(error.text==="Nope!"){%>
         <span class="error">
         &#9756;

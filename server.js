@@ -54,6 +54,32 @@ app.get("/posts", function(req, res) {
     }
   });
 });
+//User clicks to add new cats..
+app.get("/cat/add", function(req, res) {
+  db.all("SELECT * FROM users;", function(err, usersData) {
+    var uD = usersData;
+    var error = {
+      text: "Verifying..."
+    };
+    res.render("addCats.ejs", {
+      users: uD,
+      error: error
+    });
+  });
+});
+//User got password wrong?
+app.get("/cat/add/error", function(req, res) {
+  db.all("SELECT * FROM users;", function(err, usersData) {
+    var uD = usersData;
+    var error = {
+      text: "Nope!"
+    };
+    res.render("addCats.ejs", {
+      users: uD,
+      error: error
+    });
+  });
+});
 //Want to see a specific Category's page.
 app.get("/cat/:id", function(req, res) {
   //for authentication thing...
@@ -89,39 +115,14 @@ app.get("/cat/:id", function(req, res) {
     }
   });
 });
-//User clicks to add new cats..
-app.get("/cat/add", function(req, res) {
-  db.all("SELECT * FROM users;", function(err, usersData) {
-    var uD = usersData;
-    var error = {
-      text: "Verifying..."
-    };
-    res.render("addCats.ejs", {
-      users: uD,
-      error: error
-    });
-  });
-});
-//User got password wrong?
-app.get("/cat/add/error", function(req, res) {
-  db.all("SELECT * FROM users;", function(err, usersData) {
-    var uD = usersData;
-    var error = {
-      text: "Nope!"
-    };
-    res.render("addCats.ejs", {
-      users: uD,
-      error: error
-    });
-  });
-});
+
 //upon Request to make a new CATEGORY!
 app.post("/cat", function(req, res) {
   console.log(req.body);
-  db.get("SELECT * FROM users WHERE id= (?)", req.body.true, function(err, udata) {
+  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
     console.log(udata);
     if (req.body.pw === udata.password) {
-      db.run("INSERT INTO cats (Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC) VALUES (?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ctitle, req.body.Cbody, req.body.CimageUrl, req.body.true, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+      db.run("INSERT INTO cats (Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC) VALUES (?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ctitle, req.body.Cbody, req.body.CimageUrl, udata.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
         if (err) console.log(err);
         else res.redirect("/");
       });
@@ -177,11 +178,12 @@ app.get("/cat/:id/post/add", function(req, res) {
 // upon request of adding a new article is made.
 app.post("/cat/:id/post/add", function(req, res) {
   console.log(req.params.id);
-  db.get("SELECT * FROM users WHERE id= (?)", req.body.true, function(err, udata) {
+  console.log("BODYBODYBODY"+JSON.stringify(req.body));
+  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
     console.log(udata);
     if (req.body.pw === udata.password) {
       console.log("verified pw");
-      db.run("INSERT INTO posts (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.tTL, req.body.sticky, req.body.true, req.params.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+      db.run("INSERT INTO posts (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.tTL, req.body.sticky, udata.id, req.params.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
         if (err) console.log(err);
         else {
           console.log("added");
@@ -201,10 +203,11 @@ app.post("/cat/:cid/post/:id", function(req, res) {
   var comID = req.params.id;
   console.log(comID);
   console.log(req.body);
-  db.get("SELECT password FROM users WHERE id =(?)", req.body.true, function(err, uPW) {
-    console.log(uPW);
-    if (uPW.password === req.body.pw) {
-      db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, req.body.true, req.body.mBody, comID, function(err, data) {
+ db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
+    console.log(udata);
+    if (req.body.pw === udata.password) {
+      console.log("verified pw");
+      db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, udata.id, req.body.mBody, comID, function(err, data) {
         if (err) console.log(err);
         else {
           console.log(data);
@@ -287,14 +290,30 @@ app.get("/user/new/e", function(req, res) {
   });
 });
 //User creation
-app.post("/user", function(req, res) {
-  if (req.body.password === req.body.password1) {
-    res.redirect("/user/new/e")
-  }
-  db.run("INSERT INTO users (firstN, lastN, userN, email, imageUrl, image, password, Uvote, avatar, created_atU) VALUES (?, ?, ?, ?, ?, ?, ?, 1, , CURRENT_TIMESTAMP)", req.body.firstN, req.body.lastN, req.body.userN, req.body.email, req.body.imageUrl, req.body.password, function(err) {
-    res.redirect("/");
+app.post("/user/new", function(req, res) {
+  console.log(req.body);
+  db.all("SELECT * FROM users;", function(err, users) {
+    users.forEach(function(user) {
+      //will eventually lead to a different error Page
+      if (user.email === req.body.email) {
+        res.redirect("/user/new/e");
+        //will eventually lead to a different error Page
+      } else if (user.userN === req.body.userN) {
+        res.redirect("/user/new/e");
+      } else if (req.body.password !== req.body.password1) {
+        res.redirect("/user/new/e")
+      } else {
+        db.run("INSERT INTO users (firstN, lastN, userN, email, imageUrl, image, password, Uvote, avatar, created_atU) VALUES (?, ?, ?, ?, ?, ?, ?, 1, 1, CURRENT_TIMESTAMP)", req.body.firstN, req.body.lastN, req.body.userN, req.body.email, req.body.imageUrl, req.body.pw, function(err) {
+          if (err) console.log(err);
+          else {
+            res.redirect("/");
+          }
+        });
+      }
+    });
   });
 });
+
 //User creation
 //upon click on an upvote:
 app.put("/user/:id/vote", function(req, res) {

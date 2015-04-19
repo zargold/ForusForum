@@ -1,6 +1,6 @@
 <%include ./partials/header%>
 <div class="adding">
-<form method="POST" action="/user">
+<form method="POST" action="/user/new">
 <ul class="user">
 <li><label>Enter your First Name<br />
 <input type="text" placeholder="Johnny" name="firstN" maxlength="15" required></label></li>
@@ -11,7 +11,7 @@
 <input type="text" placeholder="JohnnyB1991" name="userN" maxlength="12" required>
 </label></li>
 <li><label>Enter your eMail <br />
-<input type="text" placeholder="johnnyb1991@mail.com" name="firstN" maxlength="30" required></label></li>
+<input type="text" placeholder="johnnyb1991@mail.com" name="email" maxlength="30" required></label></li>
 <%if(error.text==="Nope!"){%>
   <span class="error">
   &#9756;
