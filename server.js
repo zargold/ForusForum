@@ -457,7 +457,7 @@ app.put("/post/:id/comment/", function(req, res) {
 //User creation
 //upon click on an upvote:
 app.put("/vote", function(req, res) {
-  var direction;
+  var direction=0;
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
     console.log(udata);
     
