@@ -245,7 +245,7 @@ app.get("/post/:id/edit", function(req, res) {
 //When user clicks on EDIT THIS POST
 app.get("cat/:cid/post/:id/edit", function(req, res) {
   var editID = req.params.id;
-  var catID=req.params.cid;
+  var catID = req.params.cid;
   console.log(editID);
   db.get("SELECT * FROM posts WHERE id= (?);", editID, function(err, currentData) {
     if (err) console.log(err);
@@ -269,6 +269,33 @@ app.get("cat/:cid/post/:id/edit", function(req, res) {
     }
   });
 });
+//User Form
+app.get("/user/new", function(req, res) {
+  var error = {
+    text: "good",
+  };
+  res.render("addUser.ejs", {
+    error: error
+  });
+});
+app.get("/user/new/e", function(req, res) {
+  var error = {
+    text: "Nope!"
+  };
+  res.render("addUser.ejs", {
+    error: error
+  });
+});
+//User creation
+app.post("/user", function(req, res) {
+  if (req.body.password === req.body.password1) {
+    res.redirect("/user/new/e")
+  }
+  db.run("INSERT INTO users (firstN, lastN, userN, email, imageUrl, image, password, Uvote, avatar, created_atU) VALUES (?, ?, ?, ?, ?, ?, ?, 1, , CURRENT_TIMESTAMP)", req.body.firstN, req.body.lastN, req.body.userN, req.body.email, req.body.imageUrl, req.body.password, function(err) {
+    res.redirect("/");
+  });
+});
+//User creation
 //upon click on an upvote:
 app.put("/user/:id/vote", function(req, res) {
   console.log("This is the body" + JSON.stringify(req.body));

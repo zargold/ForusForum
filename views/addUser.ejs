@@ -2,31 +2,36 @@
 <div class="adding">
 <form method="POST" action="/user">
 <ul class="user">
- password, Uvote, avatar, created_atU
-<li><label>Enter your First Name
-<input type="text" placeholder="Johnny" value="firstN" maxlength="15" required></label></li>
-<li><label>Enter your Last Name <input type="text" placeholder="Bravo" value="lastN" maxlength="15" required>
+<li><label>Enter your First Name<br />
+<input type="text" placeholder="Johnny" name="firstN" maxlength="15" required></label></li>
+<li><label>Enter your Last Name <br />
+<input type="text" placeholder="Bravo" name="lastN" maxlength="15" required>
 </label></li>
-<li><label>Enter your User Name 
-<input type="text" placeholder="JohnnyB1991" value="userN" maxlength="12" required>
+<li><label>Enter your User Name <br />
+<input type="text" placeholder="JohnnyB1991" name="userN" maxlength="12" required>
 </label></li>
-<li><label>Enter your email
-<input type="text" placeholder="johnnyb1991@mail.com" value="firstN" maxlength="30" required></label></li>
+<li><label>Enter your eMail <br />
+<input type="text" placeholder="johnnyb1991@mail.com" name="firstN" maxlength="30" required></label></li>
+<%if(error.text==="Nope!"){%>
+  <span class="error">
+  &#9756;
+  <%}%>
+  </span>
 
-<li><label>Enter an image for your Profile
-<input type="text" placeholder="https://tstmasterassets.s3.amazonaws.com/assets/redesign/people/stock/person-2-24923d4cee72cf21a0b661ba3921b99c.jpg" value="imageUrl" minlength="10" maxlength="80" required>
+<li><label>Enter an image for your Profile <br />
+<input type="text" placeholder="https://tstmasterassets.s3.amazonaws.com/assets/redesign/people/stock/person-2-24923d4cee72cf21a0b661ba3921b99c.jpg" name="imageUrl" minlength="10" maxlength="80" required>
 </label></li>
 
-<li><label>Enter your Password
-<input type="password" placeholder="p@55VV0rd!" value="pw" required>
+<li><label>Enter your Password (this won't be secure) <br />
+<input type="password" name="pw" placeholder="p@55VV0rd!" required>
 </label></li>
-<li><label>Re-enter Password
-<input type="password" placeholder="p@55VV0rd!" value="pw1" required>
+<li><label>Re-enter Password (this won't be secure) <br />
+<input type="password" name="pw1" placeholder="p@55VV0rd!" required>
 </label></li>
 
 <li><label>Coming Soon: upload a photo.</label></li>
-<label>Everything look Good!</label>
-<span><input class="submit" type="submit"></span>
+<label>Everything look Good!</label><br />
+<li><span><input class="submit" type="submit"></span></li>
 
 </ul>
 </form>

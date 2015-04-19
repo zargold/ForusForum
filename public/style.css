@@ -283,6 +283,24 @@ img{
   padding:1px 4px 1px 4px;
   font-size: 75%;
 }
+.user{
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: flex-box;
+  flex-wrap: wrap;
+}
+.user li{
+  max-width: 50%;
+  width:45%;
+  padding:1px, 1px, 1px, 1px;
+}
+.user input{
+  width:100%;
+  max-width:100%;
+}
 #password input{
   width: 60%;
   background: linear-gradient(rgb(59, 174, 231), rgb(0, 136, 204));
