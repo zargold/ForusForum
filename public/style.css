@@ -321,7 +321,6 @@ img{
   min-width: 60px;
   max-width: 200px;
 }
-
 #comment input :hover,#post input :hover, #user input :hover, #cat input :hover {
   cursor:default;
 }

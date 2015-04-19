@@ -90,7 +90,7 @@ app.get("/cat/:id", function(req, res) {
   });
 });
 //User clicks to add new cats..
-app.get("/cats/add", function(req, res) {
+app.get("/cat/add", function(req, res) {
   db.all("SELECT * FROM users;", function(err, usersData) {
     var uD = usersData;
     var error = {
@@ -103,7 +103,7 @@ app.get("/cats/add", function(req, res) {
   });
 });
 //User got password wrong?
-app.get("/cats/add/error", function(req, res) {
+app.get("/cat/add/error", function(req, res) {
   db.all("SELECT * FROM users;", function(err, usersData) {
     var uD = usersData;
     var error = {
@@ -116,7 +116,7 @@ app.get("/cats/add/error", function(req, res) {
   });
 });
 //upon Request to make a new CATEGORY!
-app.post("/cats", function(req, res) {
+app.post("/cat", function(req, res) {
   console.log(req.body);
   db.get("SELECT * FROM users WHERE id= (?)", req.body.true, function(err, udata) {
     console.log(udata);
@@ -126,7 +126,7 @@ app.post("/cats", function(req, res) {
         else res.redirect("/");
       });
     } else {
-      res.redirect("/cats/add/error");
+      res.redirect("/cat/add/error");
     }
   });
 });
