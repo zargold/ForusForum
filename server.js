@@ -116,106 +116,93 @@ app.get("/cat/:id", function(req, res) {
   });
 });
 
-//upon Request to make a new CATEGORY!
-app.post("/cat", function(req, res) {
-  console.log(req.body);
-  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
-    console.log(udata);
-    if (req.body.pw === udata.password) {
-      db.run("INSERT INTO cats (Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC) VALUES (?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ctitle, req.body.Cbody, req.body.CimageUrl, udata.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
-        if (err) console.log(err);
-        else res.redirect("/");
-      });
-    } else {
-      res.redirect("/cat/add/error");
-    }
-  });
-});
-//Upon clicking on add link and you are wrong.
-app.get("/cat/:id/post/add/error", function(req, res) {
-  var catID = req.params.id
-  db.all("SELECT * FROM users;", function(err, uData) {
+// Upon viewing actual blogpost
+app.get("/cat/:cid/post/:id", function(req, res) {
+  var postId = req.params.id;
+  //console.log(postId);
+  //What is the information about the user who wrote this post?
+  db.all("SELECT * FROM users;", function(err, udata) {
     if (err) console.log(err);
     else {
-      var uD = uData;
-      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
-        var cD = catData;
-        var error = {
-          text: "Nope!"
-        };
-        res.render("addPost.ejs", {
-          cat: cD,
-          users: uD,
-          error: error,
-        });
-      })
+      var userlist = udata;
+      console.log("this is UserLIST" + userlist);
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
+        if (err) console.log(err);
+        else {
+          var cData = dataInCat;
+          console.log(cData);
+          db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
+            if (err) console.log(err);
+            else {
+              var pData = dataInPost;
+              console.log(pData);
+              //What is the user's info for these comments?
+              db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
+                if (err) console.log(err);
+                else {
+                  var mData = dataInComment;
+                  console.log(cData);
+                  var error = {
+                    text: "Yep!",
+                  };
+                  res.render("showCatPosts.ejs", {
+                    cat: cData,
+                    post: pData,
+                    comments: mData,
+                    users: userlist,
+                    error: error
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
     }
   });
 });
-
-//Upon clicking on add link for blogposts...
-app.get("/cat/:id/post/add", function(req, res) {
-  var catID = req.params.id
-  db.all("SELECT * FROM users;", function(err, uData) {
+//ERROR
+app.get("/cat/:cid/post/:id/error", function(req, res) {
+  var postId = req.params.id;
+  //console.log(postId);
+  //What is the information about the user who wrote this post?
+  db.all("SELECT * FROM users;", function(err, udata) {
     if (err) console.log(err);
     else {
-      var uD = uData;
-      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
-        var cD = catData;
-        var error = {
-          text: "Good"
-        };
-        res.render("addPost.ejs", {
-          cat: cD,
-          users: uD,
-          error: error,
-        });
-      })
-    }
-  });
-});
-
-// upon request of adding a new article is made.
-app.post("/cat/:id/post/add", function(req, res) {
-  console.log(req.params.id);
-  console.log("BODYBODYBODY"+JSON.stringify(req.body));
-  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
-    console.log(udata);
-    if (req.body.pw === udata.password) {
-      console.log("verified pw");
-      db.run("INSERT INTO posts (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.tTL, req.body.sticky, udata.id, req.params.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+      var userlist = udata;
+      console.log("this is UserLIST" + userlist);
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
         if (err) console.log(err);
         else {
-          console.log("added");
-          res.redirect("/");
+          var cData = dataInCat;
+          console.log(cData);
+          db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
+            if (err) console.log(err);
+            else {
+              var pData = dataInPost;
+              console.log(pData);
+              //What is the user's info for these comments?
+              db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
+                if (err) console.log(err);
+                else {
+                  var mData = dataInComment;
+                  console.log(cData);
+                  var error = {
+                    text: "Nope!"
+                  };
+                  res.render("showCatPosts.ejs", {
+                    cat: cData,
+                    post: pData,
+                    comments: mData,
+                    users: userlist,
+                    error: error
+                  });
+                }
+              });
+            }
+          });
         }
       });
-    } else {
-      res.redirect("/cat/" + req.params.id + "/post/add/error");
-    }
-  });
-});
-
-//Upon clicking: edit this particular blogpost (source:index,view)
-
-//upon adding a comment to a post.
-app.post("/cat/:cid/post/:id", function(req, res) {
-  var comID = req.params.id;
-  console.log(comID);
-  console.log(req.body);
- db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
-    console.log(udata);
-    if (req.body.pw === udata.password) {
-      console.log("verified pw");
-      db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, udata.id, req.body.mBody, comID, function(err, data) {
-        if (err) console.log(err);
-        else {
-          console.log(data);
-          res.redirect("/cat/" + req.params.cid + "/post/" + comID);
-        }
-      });
-    } else {
-      res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
     }
   });
 });
@@ -289,37 +276,152 @@ app.get("/user/new/e", function(req, res) {
     error: error
   });
 });
-//User creation
-app.post("/user/new", function(req, res) {
-  console.log(req.body);
-  db.all("SELECT * FROM users;", function(err, users) {
-    users.forEach(function(user) {
-      //will eventually lead to a different error Page
-      if (user.email === req.body.email) {
-        res.redirect("/user/new/e");
-        //will eventually lead to a different error Page
-      } else if (user.userN === req.body.userN) {
-        res.redirect("/user/new/e");
-      } else if (req.body.password !== req.body.password1) {
-        res.redirect("/user/new/e")
-      } else {
-        db.run("INSERT INTO users (firstN, lastN, userN, email, imageUrl, image, password, Uvote, avatar, created_atU) VALUES (?, ?, ?, ?, ?, ?, ?, 1, 1, CURRENT_TIMESTAMP)", req.body.firstN, req.body.lastN, req.body.userN, req.body.email, req.body.imageUrl, req.body.pw, function(err) {
-          if (err) console.log(err);
-          else {
-            res.redirect("/");
-          }
+
+//Upon clicking on add link and you are wrong.
+app.get("/cat/:id/post/add/error", function(req, res) {
+  var catID = req.params.id;
+  db.all("SELECT * FROM users;", function(err, uData) {
+    if (err) console.log(err);
+    else {
+      var uD = uData;
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
+        var cD = catData;
+        var error = {
+          text: "Nope!"
+        };
+        res.render("addPost.ejs", {
+          cat: cD,
+          users: uD,
+          error: error,
         });
-      }
-    });
+      });
+    }
+  });
+});
+
+//Upon clicking on add link for blogposts...
+app.get("/cat/:id/post/add", function(req, res) {
+  var catID = req.params.id;
+  db.all("SELECT * FROM users;", function(err, uData) {
+    if (err) console.log(err);
+    else {
+      var uD = uData;
+      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", catID, function(err, catData) {
+        var cD = catData;
+        var error = {
+          text: "Good"
+        };
+        res.render("addPost.ejs", {
+          cat: cD,
+          users: uD,
+          error: error,
+        });
+      });
+    }
+  });
+});
+
+//upon click of edit these comments!*******
+app.get("/post/:id/comments", function(req, res) {
+  var postid = parseInt(req.params.id, 10);
+  db.all("SELECT * IN comments WHERE postID=(?)", postid, function(err, dataComments) {
+    if (err) console.log(err);
+    else {
+      res.render("editComs.ejs", {
+        com: dataComments
+      });
+    }
+  });
+});
+
+// upon request of adding a new article is made.
+app.post("/cat/:id/post/add", function(req, res) {
+  console.log(req.params.id);
+  // console.log("BODYBODYBODY" + JSON.stringify(req.body));
+  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
+    console.log(udata);
+    if (req.body.pw === udata.password) {
+      console.log("verified pw");
+      db.run("INSERT INTO posts (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.tTL, req.body.sticky, udata.id, req.params.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+        if (err) console.log(err);
+        else {
+          console.log("added");
+          res.redirect("/");
+        }
+      });
+    } else {
+      res.redirect("/cat/" + req.params.id + "/post/add/error");
+    }
+  });
+});
+
+//Upon clicking: edit this particular blogpost (source:index,view)
+//upon Request to make a new CATEGORY!
+app.post("/cat", function(req, res) {
+  console.log(req.body);
+  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
+    console.log(udata);
+    if (req.body.pw === udata.password) {
+      db.run("INSERT INTO cats (Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC) VALUES (?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ctitle, req.body.Cbody, req.body.CimageUrl, udata.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+        if (err) console.log(err);
+        else res.redirect("/");
+      });
+    } else {
+      res.redirect("/cat/add/error");
+    }
+  });
+});
+//upon adding a comment to a post.
+app.post("/cat/:cid/post/:id", function(req, res) {
+  var comID = req.params.id;
+  console.log(comID);
+  console.log(req.body);
+  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
+    console.log(udata);
+    if (req.body.pw === udata.password) {
+      console.log("verified pw");
+      db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, udata.id, req.body.mBody, comID, function(err, data) {
+        if (err) console.log(err);
+        else {
+          console.log(data);
+          res.redirect("/cat/" + req.params.cid + "/post/" + comID);
+        }
+      });
+    } else {
+      res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
+    }
   });
 });
 
 //User creation
-//upon click on an upvote:
-app.put("/user/:id/vote", function(req, res) {
-  console.log("This is the body" + JSON.stringify(req.body));
-  console.log()
+app.post("/user/new", function(req, res) {
+  console.log(req.body);
+  // db.all("SELECT * FROM users;", function(err, users) {
+  //   users.forEach(function(user) {
+  //     //will eventually lead to a different error Page
+  //     if (user.email === req.body.email) {
+  //       console.log("made it to EMAIL check");
+  //       res.redirect("/user/new/e");
+  //       res.end();
+  //       return ("sorry");
+  //       //will eventually lead to a different error Page
+  //     } else if (user.userN === req.body.userN) {
+  //       console.log("made it to USER check");
+  //       res.redirect("/user/new/e");
+  //       res.end();
+  //       return ("sorry");
+  //     } else if (req.body.password !== req.body.password1) {
+  //       console.log("made it to PASSWORD check");
+  //       res.redirect("/user/new/e");
+  //     } else {
+  db.run("INSERT INTO users (firstN, lastN, userN, email, imageUrl, image, password, Uvote, avatar, created_atU) VALUES (?, ?, ?, ?, ?, ?, ?, 1, 1, CURRENT_TIMESTAMP)", req.body.firstN, req.body.lastN, req.body.userN, req.body.email, req.body.imageUrl, req.body.pw, function(err) {
+    if (err) console.log(err);
+    else {
+      res.redirect("/");
+    }
+  });
 });
+
 //upon click on edit this article Source: (index/show) Leads:(Home, Delete, Edit)
 app.put("/cat/:cid/post/:id/", function(req, res) {
   console.log(req.body);
@@ -334,18 +436,7 @@ app.put("/cat/:cid/post/:id/", function(req, res) {
     res.redirect("/post/" + req.params.id);
   });
 });
-//upon click of edit these comments!*******
-app.get("/post/:id/comments", function(req, res) {
-  var postid = parseInt(req.params.id, 10);
-  db.all("SELECT * IN comments WHERE postID=(?)", postid, function(err, dataComments) {
-    if (err) console.log(err);
-    else {
-      res.render("editComs.ejs", {
-        com: dataComments
-      });
-    }
-  });
-});
+
 //UPON Submitting the EDIT COMMENT FORM!
 app.put("/post/:id/comment/", function(req, res) {
   var comID = parseInt(req.body.id, 10),
@@ -355,7 +446,7 @@ app.put("/post/:id/comment/", function(req, res) {
     newID = req.body.userID.trim();
   console.log(req.body);
   console.log(req.params.id);
-  db.all("UPDATE comments SET body = (?), title = (?), userID = (?) WHERE id= (?)", newBod, newTitle, newID, comID, function(err, data) {
+  db.all("UPDATE comments SET Mbody = (?), Mtitle = (?), WHERE id= (?)", newBod, newTitle, newID, comID, function(err, data) {
     if (err) console.log(err);
     else {
       console.log(data);
@@ -363,93 +454,53 @@ app.put("/post/:id/comment/", function(req, res) {
     }
   });
 });
-
-// Upon viewing actual blogpost
-app.get("/cat/:cid/post/:id", function(req, res) {
-  var postId = req.params.id;
-  //console.log(postId);
-  //What is the information about the user who wrote this post?
-  db.all("SELECT * FROM users;", function(err, udata) {
-    if (err) console.log(err);
-    else {
-      var userlist = udata;
-      console.log("this is UserLIST" + userlist);
-      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
-        if (err) console.log(err);
-        else {
-          var cData = dataInCat;
-          console.log(cData);
-          db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
-            if (err) console.log(err);
-            else {
-              var pData = dataInPost;
-              console.log(pData);
-              //What is the user's info for these comments?
-              db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
-                if (err) console.log(err);
-                else {
-                  var mData = dataInComment;
-                  console.log(cData);
-                  var error = {
-                    text: "Yep!",
-                  };
-                  res.render("showCatPosts.ejs", {
-                    cat: cData,
-                    post: pData,
-                    comments: mData,
-                    users: userlist,
-                    error: error
-                  });
-                }
-              });
-            }
-          });
+//User creation
+//upon click on an upvote:
+app.put("/vote", function(req, res) {
+  var direction;
+  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
+    console.log(udata);
+    
+    if (req.body.pw === udata.password) {
+      console.log("verified pw");
+      var bodice = [];
+      for (var key in req.body) {
+        if (req.body.hasOwnProperty(key)) {
+          bodice.push(key);
         }
-      });
-    }
-  });
-});
-app.get("/cat/:cid/post/:id/error", function(req, res) {
-  var postId = req.params.id;
-  //console.log(postId);
-  //What is the information about the user who wrote this post?
-  db.all("SELECT * FROM users;", function(err, udata) {
-    if (err) console.log(err);
-    else {
-      var userlist = udata;
-      console.log("this is UserLIST" + userlist);
-      db.get("SELECT * FROM cats INNER JOIN users ON cats.userID=users.id WHERE cats.id = (?);", req.params.cid, function(err, dataInCat) {
-        if (err) console.log(err);
-        else {
-          var cData = dataInCat;
-          console.log(cData);
-          db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
-            if (err) console.log(err);
-            else {
-              var pData = dataInPost;
-              console.log(pData);
-              //What is the user's info for these comments?
-              db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
-                if (err) console.log(err);
-                else {
-                  var mData = dataInComment;
-                  console.log(cData);
-                  var error = {
-                    text: "Nope!"
-                  };
-                  res.render("showCatPosts.ejs", {
-                    cat: cData,
-                    post: pData,
-                    comments: mData,
-                    users: userlist,
-                    error: error
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
+      }
+      console.log(bodice[2]);
+      var votePiece = bodice[2].split(",");
+      console.log("votePIECE" + votePiece);
+      if (votePiece[2] === "up"){
+        direction++;
+      } 
+      else if(votePiece[2]==="down"){
+        direction--;
+      }
+      if (votePiece[0] === "cat") {
+        db.run("UPDATE cats SET Cvote=Cvote+" + direction + " WHERE created_atC = (?);", votePiece[1], function(err) {
+          if (err) console.log(err);
+          else res.redirect("/");
+        });
+      } else if (votePiece[0] === "post") {
+        db.run("UPDATE posts SET Pvote=Pvote+" + direction + " WHERE created_atP = (?);", votePiece[1], function(err) {
+          if (err) console.log(err);
+          else res.redirect("/");
+        });
+      } else if (votePiece[0] === "user") {
+        db.run("UPDATE users SET Uvote=Uvote+" + direction + " WHERE created_atU = (?);", votePiece[1], function(err) {
+          if (err) console.log(err);
+          else res.redirect("/");
+        });
+      } else if (votePiece[0] === "comment") {
+        db.run("UPDATE comments SET Mvote=Mvote+" + direction + " WHERE created_atM = (?);", votePiece[1], function(err) {
+          if (err) console.log(err);
+          else res.redirect("/");
+        });
+      }
+    } else {
+      res.redirect("/");
     }
   });
 });
@@ -484,7 +535,6 @@ app.delete("/cat/:id", function(req, res) {
     }
   });
 });
-
 app.listen(port, function() {
   console.log("listening on Port: " + port);
 });

@@ -2,7 +2,7 @@
 <head>
   <title> <%-cat.Ctitle%></title>
 </head>
-    <form method="POST" action="/cats">
+    <form method="POST" action="/vote?_method=PUT">
       <label> Your User</label>
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
@@ -32,7 +32,7 @@
          <span class="created_at">&nbsp;Created: <%-cat.created_atC%></span>
         <span class="vote" id="cat"> &nbsp;
         <label>Category: </label>
-        <input type="hidden" name="category" value="<%=posts.catID%>">
+        <input type="hidden" name="cat" value="<%=cat.id%>">
         <input type="submit" name="up" value="&#8657;">
         &nbsp;<%-cat.Cvote%>&nbsp;
         <input type="submit" name="down" value="&#8659;">

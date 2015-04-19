@@ -1,20 +1,20 @@
 <%include ./partials/header%>
       <label> Your User</label>
+      <form method="POST" action="/vote?_method=PUT">
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
     <%if(error.text==="Nope!"){%>
       <span class="error">
       &#9756;
-      </span>
     <%}%>
+    </span>
     <br />
     <div class="cat">
     <h4><a class="catlink" href="/cat/<%-post.catID%>/"><%-cat.Ctitle%></a><span class="vote" id="cat"> &nbsp;
         <label>Category: </label>
-        <input class="whatAreWeUpvoting" type="hidden" name="category" value="<%=post.catID%>">
-        <input class="Cup" type="button" name="up" value="&#8657;">
+        <input class="Cup" type="submit" name="cat,<%=cat.created_atC%>,up" value="&#8657;">
         &nbsp;<%-cat.Cvote%>&nbsp;
-        <input class="Cdo" type="submit" name="down" value="&#8659;">
+        <input class="Cdo" type="submit" name="cat,<%=cat.created_atC%>,down" value="&#8659;">
          </span>  </span></h4>
     <div class="catInfo">
        &#164;<strong><a class="taglink" href="/tag/<%=cat.tagA%>"> <%-cat.tagA%></a></strong>&nbsp;<strong><a class="taglink" href="/tag/<%=cat.tagB%>"><%-cat.tagB%> </a></strong> &nbsp;<strong><a class="taglink" href="/tag/<%=cat.tagC%>"> <%-cat.tagC%> </a></strong>
@@ -23,10 +23,9 @@
       Originator: <span class="author"><a class="authlink" href="user/<%=cat.userID%>/"><%-cat.userN%></a></span> &nbsp; <span class="avatar">(<%-cat.avatar%>)</span> &nbsp;
       <span class="vote" id="user"> &nbsp;
         <label>Rep: </label>
-        <input type="hidden" name="user" value="<%=cat.userID%>">
-        <input type="submit" class="Uup" name="up" value="&#8657;">
+        <input type="submit" class="Uup" name="user,<%=cat.created_atU%>,up" value="&#8657;">
         &nbsp;<%-cat.Uvote%>&nbsp;
-        <input type="submit" class="Udo" name="down" value="&#8659;">
+        <input type="submit" class="Udo" name="user,<%=cat.created_atU%>,down" value="&#8659;">
          </span>
     </div>
     </div>
@@ -43,10 +42,9 @@
         </span>
         <span class="vote" id="post">
           <label>Post: </label>
-          <input type="hidden" name="post" value="<%=comments.postID%>">
-          <input type="submit" name="up" value="&#8657;">
+          <input type="submit" name="post,<%=post.created_atP%>,up" value="&#8657;">
         &nbsp;<%-post.Pvote%>&nbsp;
-          <input type="submit" name="down" value="&#8659;">
+          <input type="submit" name="post,<%=post.created_atP%>,down" value="&#8659;">
         </span>
         </div>
     </div>
@@ -57,10 +55,9 @@
         <span class="author">Author: <a class="authlink" href="user/<%=post.userID%>/"><%-post.userN%></a></span> &nbsp; <span class="created_at"> User since: <%-post.created_atU%></span>&nbsp;<span class="avatar">(<%-post.avatar%>)</span>&nbsp;
         <span class="vote" id="user"> &nbsp;
         <label>Rep: </label>
-        <input type="hidden" name="user" value="<%=post.userID%>">
-        <input type="submit" name="up" value="&#8657;">
+        <input type="submit" name="user,<%=post.created_atU%>,up" value="&#8657;">
         &nbsp;<%-post.Uvote%>&nbsp;
-        <input type="submit" name="down" value="&#8659;">
+        <input type="submit" name="user,<%=post.created_atU%>,down" value="&#8659;">
          </span>
       </div>
     </div>
@@ -79,10 +76,9 @@
       <span class="created_at">Created:<%- key.created_atM %></span>&nbsp;&nbsp;
       <span class="vote" id="comment">  
       <label>Comment: </label>
-        <input type="hidden" name="comment" value="<%=key.create_atM%>">
-        <input type="submit" name="up" value="&#8657;">
+        <input type="submit" name="comment,<%=key.created_atM%>,up" value="&#8657;">
         &nbsp;<%- key.Mvote%>&nbsp;
-        <input type="submit" name="down" value="&#8659;">
+        <input type="submit" name="comment,<%=key.created_atM%>,down" value="&#8659;">
         </span>
       </div>
       <div class="author">
@@ -109,9 +105,9 @@
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
         <%if(error.text==="Nope!"){%>
         <span class="error">
-        &#9756;
-        </span>
+        &#9756; 
         <%}%>
+        </span>
         <li class="mBuild">
             <label>Title:<br></label>
             <input type="text" placeholder= "Great Work | Typo | Funny" name="mTitle" maxlength="25">
