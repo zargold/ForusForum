@@ -457,10 +457,10 @@ app.put("/post/:id/comment/", function(req, res) {
 //User creation
 //upon click on an upvote:
 app.put("/vote", function(req, res) {
-  var direction=0;
+  var direction = 0;
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
     console.log(udata);
-    
+
     if (req.body.pw === udata.password) {
       console.log("verified pw");
       var bodice = [];
@@ -472,10 +472,9 @@ app.put("/vote", function(req, res) {
       console.log(bodice[2]);
       var votePiece = bodice[2].split(",");
       console.log("votePIECE" + votePiece);
-      if (votePiece[2] === "up"){
+      if (votePiece[2] === "up") {
         direction++;
-      } 
-      else if(votePiece[2]==="down"){
+      } else if (votePiece[2] === "down") {
         direction--;
       }
       if (votePiece[0] === "cat") {
