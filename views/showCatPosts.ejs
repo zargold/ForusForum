@@ -125,8 +125,15 @@
     </main>
     </div>
     </div>
+    <form>
+    <form method="POST" action="/subscribe/<%=spID.sid%>">
+      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
+      <input type="password" name="pw" id="PW" placeholder="your Password" required>
+      <input type="submit" name="post" value="Subscribe">
+    </form>
     <ul>
       <span><li><a href="/post/<%=post.id%>/edit"> Edit this Post! </a></li>
+      
       <li><form method="POST" action="/post/<%=post.id%>?_method=DELETE">
       <input type="submit" name= "delete" value="Delete this Post">
       </form></li>

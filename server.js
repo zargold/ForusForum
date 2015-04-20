@@ -29,7 +29,7 @@ app.get("/", function(req, res) {
 
 //redirects to here the actual list of articles including edit/add/delete/COMMENT
 app.get("/posts/:id", function(req, res) {
-  var urlthing=req.params.id;
+  var urlthing = req.params.id;
   // var ender=page.num*10;
   // console.log("This is ENDER"+ender);
   // console.log("THIS IS STARTER=" + starter);
@@ -193,6 +193,9 @@ app.get("/cat/:id", function(req, res) {
 // Upon viewing actual blogpost
 app.get("/cat/:cid/post/:id", function(req, res) {
   var postId = req.params.id;
+  var spID = {
+    sid: postId
+  };
   //console.log(postId);
   //What is the information about the user who wrote this post?
   db.all("SELECT * FROM users;", function(err, udata) {
@@ -224,7 +227,8 @@ app.get("/cat/:cid/post/:id", function(req, res) {
                     post: pData,
                     comments: mData,
                     users: userlist,
-                    error: error
+                    error: error,
+                    spID: spID
                   });
                 }
               });
@@ -240,6 +244,9 @@ app.get("/cat/:cid/post/:id/error", function(req, res) {
   var postId = req.params.id;
   //console.log(postId);
   //What is the information about the user who wrote this post?
+  var spID = {
+    sid: postId
+  };
   db.all("SELECT * FROM users;", function(err, udata) {
     if (err) console.log(err);
     else {
@@ -269,7 +276,8 @@ app.get("/cat/:cid/post/:id/error", function(req, res) {
                     post: pData,
                     comments: mData,
                     users: userlist,
-                    error: error
+                    error: error,
+                    spID: spID
                   });
                 }
               });
@@ -450,6 +458,10 @@ app.post("/user/new", function(req, res) {
       res.redirect("/");
     }
   });
+});
+
+app.post("/subscribe/:id", function(req, res) {
+  console.log("THIS IS THE SUBSCRIBER POST!!!!" + req.body);
 });
 
 //upon click on edit this article Source: (index/show) Leads:(Home, Delete, Edit)
