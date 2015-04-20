@@ -5,7 +5,7 @@ var app = express();
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + '/public'));
 
-var port = 80;
+var port = 3000;
 
 
 var bodyParser = require("body-parser");
@@ -54,8 +54,10 @@ app.get("/posts/:id", function(req, res) {
     }
   }
   db.all(getpostssql, function(err, dataStoredInPosts) {
-    if (err) console.log(err);
-    else {
+    if (err) {
+      console.log(err);
+      res.redirect("/");
+    } else {
       var pTable = dataStoredInPosts;
       var next = pTable[pTable.length - 1].id;
 
@@ -452,49 +454,65 @@ app.post("/cat", function(req, res) {
 app.post("/cat/:cid/post/:id", function(req, res) {
   var comID = req.params.id;
   console.log(comID);
-  console.log(req.body);
-  if(typeof req.body.pw === undefined|| typeof req.body.inputEmail === undefined){
+  console.log("THIS IS THE COMMENT" + req.body);
+  if (typeof req.body.pw === undefined || typeof req.body.inputEmail === undefined) {
     res.redirect("/");
-  }else{
-  db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
-    console.log(udata);
-    if (req.body.pw === udata.password) {
-      console.log("verified pw");
-      db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, udata.id, req.body.mBody, comID, function(err, data) {
-        if (err) {
-          console.log(err);
-          res.redirect("/");
-        } else {
-          db.all("SELECT * FROM users INNER JOIN subs ON subs.userID=users.id WHERE subs.postID =(?)", comID, function(err, dataInUser) {
-            if (err) {
-              console.error(err);
-              console.log("There are no subs");
-            } else {
-              var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
-              var semail = new sendgrid.Email({
-                to: dataInUser.email,
-                from: 'razgoldin@gmail.com',
-                subject: "There's a new comment on " + comID,
-                text: 'Dear ' + dataInUser.firstN + dataInUser.lastN + ',\n' + udata.userN + 'has commented on the Post you subscribed to! And as always thanks for being a subscriber to FORUS!FORUM'
-              });
-              sendgrid.send(semail, function(err, json) {
-                if (err) {
-                  return console.error(err);
+    return;
+  } else {
+    db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
+      console.log(udata);
+      if (req.body.pw === udata.password) {
+        console.log("verified pw");
+        db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, udata.id, req.body.mBody, comID, function(err, data) {
+          if (err) {
+            console.log(err);
+            res.redirect("/");
+            return;
+          } else {
+            db.all("SELECT * FROM users INNER JOIN subs ON subs.userID=users.id WHERE subs.postID =(?)", comID, function(err, dataInUser) {
+              if (err) {
+                console.error(err);
+                console.log("There are no subs");
+                res.redirect('/');
+                return;
+              } else {
+                if (typeof dataInUser.email !== undefined) {
+                  dataInUser.forEach(function(key) {
+                    var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
+                    var semail = new sendgrid.Email({
+                      to: key.email,
+                      from: 'razgoldin@gmail.com',
+                      subject: "There's a new comment on " + comID,
+                      text: 'Dear ' + key.firstN + key.lastN + ',\n' + udata.userN + 'has commented on the Post you subscribed to! And as always thanks for being a subscriber to FORUS!FORUM'
+                    });
+                    sendgrid.send(semail, function(err, json) {
+                      if (err) {
+                        console.error(err);
+                        res.redirect("/");
+                        return;
+                      } else {
+                        console.log(json);
+                      }
+                    });
+                  });
+                  res.redirect("/");
+                  return;
+                } else {
+                  console.log("error");
+                  res.redirect("/");
+                  return;
                 }
-                console.log(json);
-              });
+              }
+            });
+          }
 
-              res.redirect("/cat/" + req.params.cid + "/post/" + comID);
-            }
-          });
-        }
-      });
-    } else {
-      res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
-    }
-
-  });
- }
+        });
+      } else {
+        res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
+        return;
+      }
+    });
+  }
 });
 //User creation
 app.post("/user/new", function(req, res) {

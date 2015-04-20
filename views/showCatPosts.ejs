@@ -103,8 +103,9 @@
     <%}%>
     <h4>Add your own</h4>
     <div>
-      <form method="POST" action="/cat/<%=cat.id%>/post/<%=post.id%>" class="commenting">
+    </form>
       <ul>
+      <form method="POST" action="/cat/<%=cat.id%>/post/<%=spID.sid%>" class="commenting">
       <label> Your User</label>
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" >
       <input type="password" name="pw" id="PW" placeholder="your Password">
@@ -123,9 +124,10 @@
         </li>
         <li class="mBuild">
             <span><input type="submit" value="Send"></span>
+            </form>
         </li>
       </ul>
-      </form>
+      
     </div>
     </main>
     </div>
