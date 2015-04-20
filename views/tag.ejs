@@ -1,5 +1,5 @@
 <%include ./partials/header%>
-    <h2> All Feed! </h2>
+    <h2> <%-post.tagA%> <%-post.tagB%> <%-post.tagC%>Feed! </h2>
     <div class="topcat">
       <ul class="cats">
       <%cats.forEach(function(cat){%>
@@ -7,7 +7,6 @@
       <%});%>
       </ul>
     </div>
-    
     <% if( typeof posts!==undefined){%>
     <ol>
       <% posts.forEach(function(key){ %>

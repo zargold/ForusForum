@@ -102,11 +102,12 @@
     <form>
 
     </form>
+    </form>
     <br />
     <%}%>
     <h3>Add your own<br></h3>
     <div>
-      <form method="POST" action="/cat/<%=cat.id%>/post/<%=post.id%>">
+      <form method="POST" action="/cat/<%=cat.id%>/post/<%=post.id%>" class="commenting">
       <ul>
       <label> Your User</label>
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" >

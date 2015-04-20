@@ -376,6 +376,30 @@ app.get("/post/:id/comments", function(req, res) {
   });
 });
 
+app.get("/tag/:tN", function(req, res) {
+  var tn = req.params.tN.toLowerCase();
+  if (typeof tn === undefined) res.redirect("/");
+  else if (tn.length < 2) {
+    res.redirect("/tag");
+  } else {
+    db.all("SELECT * FROM posts INNER JOIN ON posts.userID=users.id WHERE tagA = (?) or tagB=(?) or tagC=(?)", tn, tn, tn,
+      function(err, tagP) {
+        //eventually have an error message appear.
+        if (err) {
+          console.log(err);
+          res.redirect("/");
+        } else {
+          db.all("SELECT * FROM cats INNER JOIN ON posts.userID=users.id WHERE tagA = (?) or tagB=(?) or tagC=(?)", tn, tn, tn,
+            function(err, tagC) {
+              res.render("tag.ejs", {
+                posts: tagP,
+                cats: tagC
+              });
+            });
+        }
+      });
+  }
+});
 // upon request of adding a new article is made.
 app.post("/cat/:id/post/add", function(req, res) {
   console.log(req.params.id);
@@ -426,6 +450,20 @@ app.post("/cat/:cid/post/:id", function(req, res) {
         if (err) console.log(err);
         else {
           console.log(data);
+          var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
+          var semail = new sendgrid.Email({
+            to: dataInUser.email,
+            from: 'razgoldin@gmail.com',
+            subject: "Thank you -Forus!Forum",
+            text: 'Dear ' + dataInUser.fName + dataInUser.lName ',\nThank you for subscribing to Forus!Forum you will now get emails everytime someone makes a comment to your favorite post.'
+          });
+          sendgrid.send(semail, function(err, json) {
+            if (err) {
+              return console.error(err);
+            }
+            console.log(json);
+          });
+
           res.redirect("/cat/" + req.params.cid + "/post/" + comID);
         }
       });
@@ -463,7 +501,7 @@ app.post("/user/new", function(req, res) {
     }
   });
 });
-app.post("/subscribe/:id", function(req, res) {
+app.post("/subscribe/p/:id", function(req, res) {
   // console.log("THIS IS THE SUBSCRIBER POST!!!!" + JSON.stringify(req.body));
   db.get("SELECT * FROM users WHERE email=(?)", req.body.inputEmail, function(err, dataInUser) {
     console.log("DATA IN USER: " + JSON.stringify(dataInUser));
@@ -473,14 +511,13 @@ app.post("/subscribe/:id", function(req, res) {
     console.log("USERID" + uID + "POST ID" + pID);
     db.run("INSERT INTO subs (userID, postID, created_at) VALUES (?, ?, CURRENT_TIMESTAMP);", uID, pID, function(err) {
       if (err) console.log(err);
-
     });
     var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
     var semail = new sendgrid.Email({
-      to: req.body.inputEmail,
-      from: 'whatever@gmail.com',
-      subject: "You're subscribed!",
-      text: 'You are now subscribed'
+      to: dataInUser.email,
+      from: 'razgoldin@gmail.com',
+      subject: "Thank you -Forus!Forum",
+      text: 'Dear ' + dataInUser.fName + dataInUser.lName ',\nThank you for subscribing to Forus!Forum you will now get emails everytime someone makes a comment to your favorite post.'
     });
     sendgrid.send(semail, function(err, json) {
       if (err) {
@@ -527,50 +564,55 @@ app.put("/post/:id/comment/", function(req, res) {
 //upon click on an upvote:
 app.put("/vote", function(req, res) {
   var direction = 0;
-  console.log("THIS IS RESBODYVOTE!!!"+res.body);
+  console.log("THIS IS RESBODYVOTE!!!" + res.body);
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
-    console.log(udata);
-    if (req.body.pw === udata.password) {
-      console.log("verified pw");
-      var bodice = [];
-      for (var key in req.body) {
-        if (req.body.hasOwnProperty(key)) {
-          bodice.push(key);
-        }
-      }
-      console.log(bodice[2]);
-      var votePiece = bodice[2].split(",");
-      console.log("votePIECE" + votePiece);
-      if (votePiece[2] === "up") {
-        direction++;
-      } else if (votePiece[2] === "down") {
-        direction--;
-      } else {
-        console.log("THERES NOTHING!");
-      }
-      if (votePiece[0] === "cat") {
-        db.run("UPDATE cats SET Cvote=Cvote+" + direction + " WHERE created_atC = (?);", votePiece[1], function(err) {
-          if (err) console.log(err);
-          else res.redirect("/");
-        });
-      } else if (votePiece[0] === "post") {
-        db.run("UPDATE posts SET Pvote = Pvote+" + direction + " WHERE created_atP = (?);", votePiece[1], function(err) {
-          if (err) console.log(err);
-          else res.redirect("/");
-        });
-      } else if (votePiece[0] === "user") {
-        db.run("UPDATE users SET Uvote=Uvote+" + direction + " WHERE created_atU = (?);", votePiece[1], function(err) {
-          if (err) console.log(err);
-          else res.redirect("/");
-        });
-      } else if (votePiece[0] === "comment") {
-        db.run("UPDATE comments SET Mvote=Mvote+" + direction + " WHERE created_atM = (?);", votePiece[1], function(err) {
-          if (err) console.log(err);
-          else res.redirect("/");
-        });
-      }
-    } else {
+    if (err) {
+      console.log(err);
       res.redirect("/");
+    } else {
+      console.log(udata);
+      if (req.body.pw === udata.password) {
+        console.log("verified pw");
+        var bodice = [];
+        for (var key in req.body) {
+          if (req.body.hasOwnProperty(key)) {
+            bodice.push(key);
+          }
+        }
+        console.log(bodice[2]);
+        var votePiece = bodice[2].split(",");
+        console.log("votePIECE" + votePiece);
+        if (votePiece[2] === "up") {
+          direction++;
+        } else if (votePiece[2] === "down") {
+          direction--;
+        } else {
+          console.log("THERES NOTHING!");
+        }
+        if (votePiece[0] === "cat") {
+          db.run("UPDATE cats SET Cvote=Cvote+" + direction + " WHERE created_atC = (?);", votePiece[1], function(err) {
+            if (err) console.log(err);
+            else res.redirect("/");
+          });
+        } else if (votePiece[0] === "post") {
+          db.run("UPDATE posts SET Pvote = Pvote+" + direction + " WHERE created_atP = (?);", votePiece[1], function(err) {
+            if (err) console.log(err);
+            else res.redirect("/");
+          });
+        } else if (votePiece[0] === "user") {
+          db.run("UPDATE users SET Uvote=Uvote+" + direction + " WHERE created_atU = (?);", votePiece[1], function(err) {
+            if (err) console.log(err);
+            else res.redirect("/");
+          });
+        } else if (votePiece[0] === "comment") {
+          db.run("UPDATE comments SET Mvote=Mvote+" + direction + " WHERE created_atM = (?);", votePiece[1], function(err) {
+            if (err) console.log(err);
+            else res.redirect("/");
+          });
+        }
+      } else {
+        res.redirect("/");
+      }
     }
   });
 });
