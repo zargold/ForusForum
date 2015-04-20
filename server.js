@@ -24,28 +24,30 @@ var request = require("request");
 
 //Home page of the Blogger Redirects to list of blogposts
 app.get("/", function(req, res) {
-  res.redirect("/posts/page/0");
+  res.redirect("/posts/latest");
 });
 
 //redirects to here the actual list of articles including edit/add/delete/COMMENT
-app.get("/posts/page/:id", function(req, res) {
-  var pagen = parseInt(req.params.id, 10);
-  var starter = parseInt(("" + pagen + 1), 10);
-  var page = {
-    num: pagen + 1
-  };
-  var ender=page.num*10;
-  console.log("This is ENDER"+ender);
-  console.log("THIS IS STARTER=" + starter);
-  console.log("NUMBER STORED IN PAGE=" + page.num);
-  db.all("SELECT * FROM posts;", function(err, dataStoredInPosts) {
+app.get("/posts/:id", function(req, res) {
+  var urlthing=req.params.id;
+  // var ender=page.num*10;
+  // console.log("This is ENDER"+ender);
+  // console.log("THIS IS STARTER=" + starter);
+  // console.log("NUMBER STORED IN PAGE=" + page.num);
+  var getpostssql = "select * from posts order by id desc limit 3;";
+  if (urlthing != "latest") {
+    // var starter = parseInt(req.params.id, 10);
+    getpostssql = "select * from posts where id < " + urlthing + " order by id desc limit 3;";
+  }
+
+  db.all(getpostssql, function(err, dataStoredInPosts) {
     if (err) console.log(err);
     else {
-      var pTable = [];
-      for (var i = starter; i <= ender; i++) {
-          if(typeof dataStoredInPosts[i].Ptitle!==null && typeof dataStoredInPosts[i].Ptitle!==undefined)
-            console.log(dataStoredInPosts[0]);
-          pTable.push(dataStoredInPosts[i]);
+      var pTable = dataStoredInPosts;
+      var next = pTable[pTable.length - 1].id;
+
+      var what = {
+        thing: next
       }
       console.log(pTable);
       db.all("SELECT * FROM cats", function(err, categsdata) {
@@ -61,7 +63,7 @@ app.get("/posts/page/:id", function(req, res) {
                 posts: pTable,
                 comments: mData,
                 cats: cData,
-                page: page
+                what: what
               });
             }
           });
