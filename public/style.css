@@ -334,6 +334,9 @@ display: -webkit-flex;
   display: -moz-flex;
   min-width:10%;
 }
+#mceu_19{
+  min-width:100%;
+}
 #password input{
   width: 60%;
 }
