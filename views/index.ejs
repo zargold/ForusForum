@@ -7,7 +7,9 @@
       <%});%>
       </ul>
     </div>
-    
+    <% if(nothing.first==="Nothing left"){%>
+      <div> <p>nothing left went to top!</p></div>
+    <%}%>
     <% if( typeof posts!==undefined){%>
     <ol>
       <% posts.forEach(function(key){ %>

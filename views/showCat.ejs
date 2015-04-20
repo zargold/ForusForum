@@ -3,7 +3,6 @@
   <title> <%-cat.Ctitle%></title>
 </head>
     <form method="POST" action="/vote?_method=PUT">
-      <label> Your User</label>
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
         
@@ -35,17 +34,18 @@
         <input class="Cup" type="submit" name="cat,<%=cat.created_atC%>,up" value="&#8657;">
         &nbsp;<%-cat.Cvote%>&nbsp;
         <input class="Cdo" type="submit" name="cat,<%=cat.created_atC%>,down" value="&#8659;">
-        </span>
+         </span>  </span>
     </div>
     <div class="author">
       <h4>Originator: </h4><span class="author"><a class="authlink" href="user/<%=cat.userID%>/"><%-cat.userN%></a></span> &nbsp; <span class="avatar">(<%-cat.avatar%>)</span> &nbsp;
       <span class="created_at"> &nbsp;Created: <%-cat.created_atU%></span>
       <span class="vote" id="user"> &nbsp;
-      <label>Rep: </label>
+        <label>Rep: </label>
         <input type="submit" class="Uup" name="user,<%=cat.created_atU%>,up" value="&#8657;">
         &nbsp;<%-cat.Uvote%>&nbsp;
         <input type="submit" class="Udo" name="user,<%=cat.created_atU%>,down" value="&#8659;">
          </span>
+    </form>
     </div>
     <!-- Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC)  -->
     <div class="cat">
@@ -58,7 +58,6 @@
         <%}%>
     </div>
     </div>
-    </form>
     <div> 
     <%if(posts.length<1){%>
       <div>

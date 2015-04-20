@@ -64,8 +64,10 @@
         &nbsp;<%-post.Uvote%>&nbsp;
         <input type="submit" name="user,<%=post.created_atU%>,down" value="&#8659;">
          </span>
+      </form>
       </div>
     </div>
+
     <form method="POST" action="/vote?_method=PUT">
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
@@ -97,11 +99,9 @@
         <p><%- key.bodyM %></p>
       </div>
     <%});%>
-    </form>
-    <br />
+    </form></>
     <%}%>
-    
-    <h3>Add your own<br></h3>
+    <h4>Add your own</h4>
     <div>
       <form method="POST" action="/cat/<%=cat.id%>/post/<%=post.id%>" class="commenting">
       <ul>

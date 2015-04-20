@@ -39,12 +39,19 @@ app.get("/posts/:id", function(req, res) {
   // console.log("THIS IS STARTER=" + starter);
   // console.log("NUMBER STORED IN PAGE=" + page.num);
   var getpostssql = "select * from posts order by id desc limit 3;";
+  var nothingleft = {
+    first: "Stuff"
+  };
   if (urlthing != "latest") {
     // var starter = parseInt(req.params.id, 10);
     if (typeof urlthing === undefined || urlthing < 2 || urlthing < 1) {
       getpostssql = "select * from posts order by id desc limit 3;";
+      nothingleft = {
+        first: "Nothing left"
+      };
+    } else {
+      getpostssql = "select * from posts where id < " + urlthing + " order by id desc limit 3;";
     }
-    getpostssql = "select * from posts where id < " + urlthing + " order by id desc limit 3;";
   }
   db.all(getpostssql, function(err, dataStoredInPosts) {
     if (err) console.log(err);
@@ -69,7 +76,8 @@ app.get("/posts/:id", function(req, res) {
                 posts: pTable,
                 comments: mData,
                 cats: cData,
-                what: what
+                what: what,
+                nothing: nothingleft
               });
             }
           });
@@ -158,7 +166,7 @@ app.get("/cat/:id/post/add/error", function(req, res) {
 
 //Want to see a specific Category's page.
 app.get("/cat/:id", function(req, res) {
-  //for authentication thing...
+  //for authentication thing..
   db.all("SELECT * FROM users;", function(err, usersData) {
     if (err) console.log(err);
     else {
@@ -379,11 +387,12 @@ app.get("/post/:id/comments", function(req, res) {
 });
 
 app.get("/tag/:tN", function(req, res) {
-  if (typeof req.params.tN === undefined) res.redirect("/");
-  var tn = req.params.tN.toLowerCase();
-  else if (tn.length < 2) {
+  if (typeof req.params.tN === undefined) {
+    res.redirect("/");
+  } else if (req.params.tN.length < 2) {
     res.redirect("/");
   } else {
+    var tn = req.params.tN.toLowerCase();
     db.all("SELECT * FROM posts INNER JOIN ON posts.userID=users.id WHERE tagA = (?) or tagB=(?) or tagC=(?)", tn, tn, tn,
       function(err, tagP) {
         //eventually have an error message appear.
@@ -444,6 +453,9 @@ app.post("/cat/:cid/post/:id", function(req, res) {
   var comID = req.params.id;
   console.log(comID);
   console.log(req.body);
+  if(typeof req.body.pw === undefined|| typeof req.body.inputEmail === undefined){
+    res.redirect("/");
+  }else{
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
     console.log(udata);
     if (req.body.pw === udata.password) {
@@ -480,7 +492,9 @@ app.post("/cat/:cid/post/:id", function(req, res) {
     } else {
       res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
     }
+
   });
+ }
 });
 //User creation
 app.post("/user/new", function(req, res) {
