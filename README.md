@@ -1,6 +1,6 @@
 # ForusForum
- A Node, Express, SQL or NoSQL db built for looks, speed, and all the information you could ever use!
-## CRUDDY Forus Forum
+ A Node, Express, SQite Stackbuilt for looks, speed, and all the information you could ever use!
+## General Description
 For use by any user who wants their posts viewed by the world. Gain reputation/votes by logging in and upvoting your friend's user's posts and comments. Create all the categories you want and add yourself as a user. Or subscribe to your favorite posts, categories and always know when someone has commented..
 ## A user can:
 - Upvote Comments, Users, Categories.
