@@ -379,10 +379,10 @@ app.get("/post/:id/comments", function(req, res) {
 });
 
 app.get("/tag/:tN", function(req, res) {
+  if (typeof req.params.tN === undefined) res.redirect("/");
   var tn = req.params.tN.toLowerCase();
-  if (typeof tn === undefined) res.redirect("/");
   else if (tn.length < 2) {
-    res.redirect("/tag");
+    res.redirect("/");
   } else {
     db.all("SELECT * FROM posts INNER JOIN ON posts.userID=users.id WHERE tagA = (?) or tagB=(?) or tagC=(?)", tn, tn, tn,
       function(err, tagP) {
