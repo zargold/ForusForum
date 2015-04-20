@@ -283,16 +283,28 @@ img{
   padding:1px 4px 1px 4px;
   font-size: 75%;
 }
+.adding{
+  width:95%;
+  max-width:95%;
+  min-width:95%;
+  height:80%;
+  display:flex-box;
+display: -webkit-flex;
+}
 .user{
-  display: -webkit-box;
+  display: -webkit-flex;
+      display: flex-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: -moz-flex;
-  display: -webkit-flex;
-  display: flex-box;
+
   flex-wrap: wrap;
+  max-width:100%;
+  width:100%;
+  min-width:100%;
 }
 .user li{
+  min-width:45%;
   max-width: 50%;
   width:45%;
   padding:1px, 1px, 1px, 1px;
