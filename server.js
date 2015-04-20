@@ -472,12 +472,12 @@ app.post("/cat/:cid/post/:id", function(req, res) {
 
                     res.redirect("/cat/" + req.params.cid + "/post/" + comID);
                   });
-              }
-            });
-        } else {
-          res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
-        }
-      });
+              });
+          }
+        });
+    } else {
+      res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
+    }
   });
 });
 //User creation
