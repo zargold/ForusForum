@@ -374,6 +374,55 @@ app.get("/user/new/e", function(req, res) {
     error: error
   });
 });
+app.get("/user/:id", function(req, res) {
+  var getpostssql = "select * from posts order by id desc limit 10;";
+  var nothingleft = {
+    first: "Stuff"
+  };
+  db.all("SELECT * FROM posts WHERE userID=?", req.params.id, function(err, dataStoredInPosts) {
+    if (err) {
+      console.log(err);
+      console.log("made it to POSTS only here!");
+      res.redirect("/");
+      return;
+    } else {
+      var pTable = dataStoredInPosts;
+      var next = pTable[pTable.length - 1].id;
+
+      var what = {
+        thing: next
+      };
+      console.log(pTable);
+      db.all("SELECT * FROM cats WHERE userID=?", req.params.id, function(err, categsdata) {
+        if (err) {
+          console.log(err);
+          console.log("made it here!");
+          res.redirect("/");
+          return;
+        } else {
+          var cData = categsdata;
+          db.all("SELECT * FROM comments WHERE userID=?", req.params.id, function(err, dataInComments) {
+            if (err) {
+              console.log(err);
+              res.redirect("/");
+              return;
+            } else {
+              var mData = dataInComments;
+              console.log(mData);
+              res.render("userProfile.ejs", { //sets data retrieved as "posts"
+                posts: pTable,
+                comments: mData,
+                cats: cData,
+                what: what,
+                nothing: nothingleft
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+});
 
 //upon click of edit these comments!*******
 app.get("/post/:id/comments", function(req, res) {
@@ -418,16 +467,26 @@ app.post("/cat/:id/post/add", function(req, res) {
   console.log(req.params.id);
   // console.log("BODYBODYBODY" + JSON.stringify(req.body));
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
+    if (err) {
+      console.log(err);
+      res.redirect("/");
+      return;
+    }
     console.log(udata);
-    if (req.body.pw === udata.password) {
-      console.log("verified pw");
-      db.run("INSERT INTO posts (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.tTL, req.body.sticky, udata.id, req.params.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
-        if (err) console.log(err);
-        else {
-          console.log("added");
-          res.redirect("/");
-        }
-      });
+
+    if (typeof udata.password !== undefined) {
+      if (req.body.pw === udata.password) {
+        console.log("verified pw");
+        db.run("INSERT INTO posts (Ptitle, Pbody, PimageUrl, timeLive, timeSticky, userID, catID, tagA, tagB, tagC, Pvote, created_atP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ptitle, req.body.Pbody, req.body.PimageUrl, req.body.tTL, req.body.sticky, udata.id, req.params.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
+          if (err) console.log(err);
+          else {
+            console.log("added");
+            res.redirect("/");
+          }
+        });
+      } else {
+        res.redirect("/cat/" + req.params.id + "/post/add/error");
+      }
     } else {
       res.redirect("/cat/" + req.params.id + "/post/add/error");
     }
@@ -439,8 +498,11 @@ app.post("/cat/:id/post/add", function(req, res) {
 app.post("/cat", function(req, res) {
   console.log(req.body);
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
-    console.log(udata);
-    if (req.body.pw === udata.password) {
+    if (err) {
+      console.log(err);
+      res.redirect("/");
+      return;
+    } else if (req.body.pw === udata.password) {
       db.run("INSERT INTO cats (Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC) VALUES (?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.Ctitle, req.body.Cbody, req.body.CimageUrl, udata.id, req.body.tagA.toLowerCase().trim(), req.body.tagB.toLowerCase().trim(), req.body.tagC.toLowerCase().trim(), function(err) {
         if (err) console.log(err);
         else res.redirect("/");
@@ -454,7 +516,7 @@ app.post("/cat", function(req, res) {
 app.post("/cat/:cid/post/:id", function(req, res) {
   var comID = req.params.id;
   console.log(comID);
-  console.log("THIS IS THE COMMENT" + req.body);
+  console.log("THIS IS THE COMMENT" + JSON.stringify(req.body));
   if (typeof req.body.pw === undefined || typeof req.body.inputEmail === undefined) {
     res.redirect("/");
     return;
