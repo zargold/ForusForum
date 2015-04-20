@@ -22,7 +22,7 @@ var db = new sqlite3.Database("./db/forum.db");
 
 var request = require("request");
 var sendgrid_api = process.env["SENDGRID_API"];
-var sendgrid_user = process.env["SENDGRID_USER"]
+var sendgrid_user = process.env["SENDGRID_USER"];
 
 
 //Home page of the Blogger Redirects to list of blogposts
@@ -52,7 +52,7 @@ app.get("/posts/:id", function(req, res) {
 
       var what = {
         thing: next
-      }
+      };
       console.log(pTable);
       db.all("SELECT * FROM cats", function(err, categsdata) {
         if (err) console.log(err);
@@ -437,42 +437,49 @@ app.post("/cat", function(req, res) {
     }
   });
 });
-//upon adding a comment to a post.
+//upon adding a comment to a post. firstN TEXT, lastN TEXT, userN TEXT, email TEXT, imageUrl TEXT, image BLOB, password TEXT, Uvote INTEGER, avatar TEXT, updated_atU REAL, created_atU REAL);
 app.post("/cat/:cid/post/:id", function(req, res) {
   var comID = req.params.id;
   console.log(comID);
   console.log(req.body);
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
-    console.log(udata);
-    if (req.body.pw === udata.password) {
-      console.log("verified pw");
-      db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, udata.id, req.body.mBody, comID, function(err, data) {
-        if (err) console.log(err);
-        else {
-          console.log(data);
-          var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
-          var semail = new sendgrid.Email({
-            to: dataInUser.email,
-            from: 'razgoldin@gmail.com',
-            subject: "Thank you -Forus!Forum",
-            text: 'Dear ' + dataInUser.fName + dataInUser.lName ',\nThank you for subscribing to Forus!Forum you will now get emails everytime someone makes a comment to your favorite post.'
-          });
-          sendgrid.send(semail, function(err, json) {
+      console.log(udata);
+      if (req.body.pw === udata.password) {
+        console.log("verified pw");
+        db.run("INSERT INTO comments (titleM, userID, bodyM, postID, Mvote, created_atM) VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", req.body.mTitle, udata.id, req.body.mBody, comID, function(err, data) {
             if (err) {
-              return console.error(err);
-            }
-            console.log(json);
-          });
+              console.log(err);
+              res.redirect("/");
+            } else {
+              db.all("SELECT * FROM users INNER JOIN subs ON subs.userID=users.id WHERE subs.postID =(?)", comID, function(err, dataInUser) {
+                  if (err) {
+                    console.error(err);
+                    console.log("There are no subs");
+                  } else {
+                    var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
+                    var semail = new sendgrid.Email({
+                      to: dataInUser.email,
+                      from: 'razgoldin@gmail.com',
+                      subject: "There's a new comment on " + comID,
+                      text: 'Dear ' + dataInUser.firstN + dataInUser.lastN + ',\n' + udata.userN + 'has commented on the Post you subscribed to! And as always thanks for being a subscriber to FORUS!FORUM'
+                    });
+                    sendgrid.send(semail, function(err, json) {
+                      if (err) {
+                        return console.error(err);
+                      }
+                      console.log(json);
+                    });
 
-          res.redirect("/cat/" + req.params.cid + "/post/" + comID);
+                    res.redirect("/cat/" + req.params.cid + "/post/" + comID);
+                  });
+              }
+            });
+        } else {
+          res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
         }
       });
-    } else {
-      res.redirect("/cat/" + req.params.cid + "/post/" + comID + "/error");
-    }
   });
 });
-
 //User creation
 app.post("/user/new", function(req, res) {
   console.log(req.body);
@@ -510,14 +517,45 @@ app.post("/subscribe/p/:id", function(req, res) {
     var pID = req.params.id;
     console.log("USERID" + uID + "POST ID" + pID);
     db.run("INSERT INTO subs (userID, postID, created_at) VALUES (?, ?, CURRENT_TIMESTAMP);", uID, pID, function(err) {
+      if (err) {
+        console.log(err);
+        res.redirect("/");
+      } else {
+
+        var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
+        var semail = new sendgrid.Email({
+          to: dataInUser.email,
+          from: 'razgoldin@gmail.com',
+          subject: "Thank you -Forus!Forum",
+          text: 'Dear ' + dataInUser.fName + dataInUser.lName + ',\nThank you for subscribing to Forus!Forum you will now get emails everytime someone makes a comment to your favorite post.'
+        });
+        sendgrid.send(semail, function(err, json) {
+          if (err) {
+            return console.error(err);
+          }
+          console.log(json);
+        });
+      }
+    });
+  });
+});
+
+app.post("/subscribe/c/:id", function(req, res) {
+  // console.log("THIS IS THE SUBSCRIBER POST!!!!" + JSON.stringify(req.body));
+  db.get("SELECT * FROM users WHERE email=(?)", req.body.inputEmail, function(err, dataInUser) {
+    //console.log("DATA IN USER: " + JSON.stringify(dataInUser));
+    var uID = dataInUser.id;
+    var cID = req.params.id;
+    console.log("USERID" + uID + "POST ID" + cID);
+    db.run("INSERT INTO csubs (userID, catID, created_at) VALUES (?, ?, CURRENT_TIMESTAMP);", uID, cID, function(err) {
       if (err) console.log(err);
     });
     var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
     var semail = new sendgrid.Email({
       to: dataInUser.email,
       from: 'razgoldin@gmail.com',
-      subject: "Thank you -Forus!Forum",
-      text: 'Dear ' + dataInUser.fName + dataInUser.lName ',\nThank you for subscribing to Forus!Forum you will now get emails everytime someone makes a comment to your favorite post.'
+      subject: "New post in " + cID + " -Forus!Forum",
+      text: 'Dear ' + dataInUser.fName + dataInUser.lName + ',\nThank you for subscribing to Forus!Forum you will now get emails everytime someone adds a post to your favorite Categories.'
     });
     sendgrid.send(semail, function(err, json) {
       if (err) {
@@ -527,7 +565,6 @@ app.post("/subscribe/p/:id", function(req, res) {
     });
   });
 });
-
 //upon click on edit this article Source: (index/show) Leads:(Home, Delete, Edit)
 app.put("/cat/:cid/post/:id/", function(req, res) {
   console.log(req.body);

@@ -16,8 +16,8 @@
          <form method="POST" action="/post/<%=key.id%>?_method=DELETE">
           <input type="submit" name= "delete" value="Delete this Post"></div></span>
           </form></li>
-          <a href="/posts/<%=what.thing%>/"> >View Next Page</a>
       <%});%>
+    <a href="/posts/<%=what.thing%>/"> >View Next Page</a>
       <%}else{%>
         No more posts. <a href="/"> >Back Home</a>
     </ol>

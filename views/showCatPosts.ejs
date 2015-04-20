@@ -41,11 +41,8 @@
         <span class="created_at">Updated: <%-post.updated_atP%>
         <%}%>
         </span>
-        </form>
-        <form method="POST" action="/vote?_method=PUT">
         <span class="vote" id="post">
           <label>Post: </label>
-          <
           <input type="submit" name="post,<%=post.created_atP%>,up" value="&#8657;">
         &nbsp;<%=post.Pvote%>&nbsp;
           <input type="submit" name="post,<%=post.created_atP%>,down" value="&#8659;">
@@ -69,7 +66,9 @@
          </span>
       </div>
     </div>
-
+    <form method="POST" action="/vote?_method=PUT">
+      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
+      <input type="password" name="pw" id="PW" placeholder="your Password" required>
     <h4>Comments</h4>
     <%if (comments.length<1){%>
       <div class="comFull">
@@ -99,12 +98,9 @@
       </div>
     <%});%>
     </form>
-    <form>
-
-    </form>
-    </form>
     <br />
     <%}%>
+    
     <h3>Add your own<br></h3>
     <div>
       <form method="POST" action="/cat/<%=cat.id%>/post/<%=post.id%>" class="commenting">
@@ -134,7 +130,7 @@
     </main>
     </div>
     </div>
-    <form method="POST" action="/subscribe/<%=spID.sid%>">
+    <form method="POST" action="/subscribe/p/<%=spID.sid%>">
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
       <input type="submit" name="post" value="Subscribe">

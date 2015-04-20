@@ -90,8 +90,13 @@
     </main>
     <div class="topcat">
     <ul class="cats">
-      <li><a href="/cat/<%=cat.id%>/edit">Edit Category</a></li>
+      <li><a href="/cat/<%=spID.number%>/edit">Edit Category</a></li>
       <li><a href="/post/add"> Add another Post</a></li>
     </ul>
     </div>
+    <form method="POST" action="/subscribe/c/<%=spID.number%>">
+      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
+      <input type="password" name="pw" id="PW" placeholder="your Password" required>
+      <input type="submit" name="post" value="Subscribe">
+    </form>
 <%include ./partials/footer%>
