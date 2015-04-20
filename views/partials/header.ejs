@@ -7,9 +7,8 @@
     <title> forus:forum </title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
-
-
-<script>tinymce.init({selector:'textarea'});
+<script>
+tinymce.init({selector:'textarea'});
 $('.tinymce').tinymce({
   theme : 'advanced',
   plugins : 'autoresize',
@@ -18,6 +17,7 @@ $('.tinymce').tinymce({
   autoresize_min_height: 400,
   autoresize_max_height: 800,
 });
+document.getElementById(id+'_tbl').style.width='100%'
 </script>
   </head>
   <body>
