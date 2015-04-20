@@ -32,21 +32,19 @@
          <span class="created_at">&nbsp;Created: <%-cat.created_atC%></span>
         <span class="vote" id="cat"> &nbsp;
         <label>Category: </label>
-        <input type="hidden" name="cat" value="<%=cat.id%>">
-        <input type="submit" name="up" value="&#8657;">
+        <input class="Cup" type="submit" name="cat,<%=cat.created_atC%>,up" value="&#8657;">
         &nbsp;<%-cat.Cvote%>&nbsp;
-        <input type="submit" name="down" value="&#8659;">
+        <input class="Cdo" type="submit" name="cat,<%=cat.created_atC%>,down" value="&#8659;">
         </span>
     </div>
     <div class="author">
-      Originator: <span class="author"><a class="authlink" href="user/<%=cat.userID%>/"><%-cat.userN%></a></span> &nbsp; <span class="avatar">(<%-cat.avatar%>)</span> &nbsp;
+      <h4>Originator: </h4><span class="author"><a class="authlink" href="user/<%=cat.userID%>/"><%-cat.userN%></a></span> &nbsp; <span class="avatar">(<%-cat.avatar%>)</span> &nbsp;
       <span class="created_at"> &nbsp;Created: <%-cat.created_atU%></span>
       <span class="vote" id="user"> &nbsp;
-        <label>Rep: </label>
-        <input type="hidden" name="user" value="<%=cat.userID%>">
-        <input type="submit" name="up" value="&#8657;">
+      <label>Rep: </label>
+        <input type="submit" class="Uup" name="user,<%=cat.created_atU%>,up" value="&#8657;">
         &nbsp;<%-cat.Uvote%>&nbsp;
-        <input type="submit" name="down" value="&#8659;">
+        <input type="submit" class="Udo" name="user,<%=cat.created_atU%>,down" value="&#8659;">
          </span>
     </div>
     <!-- Ctitle, Cbody, CimageUrl, userID, tagA, tagB, tagC, Cvote, created_atC)  -->

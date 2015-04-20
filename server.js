@@ -2,7 +2,7 @@ var ejs = require("ejs");
 var express = require("express");
 
 var app = express();
-app.set("view_engine", "ejs");
+app.set("view engine", "ejs");
 app.use(express.static(__dirname + '/public'));
 
 var port = 3000;
@@ -21,8 +21,12 @@ var db = new sqlite3.Database("./db/forum.db");
 //console.log(db.all("SELECT * FROM posts"));
 
 var request = require("request");
+var sendgrid_api = process.env["SENDGRID_API"];
+var sendgrid_user = process.env["SENDGRID_USER"]
+
 
 //Home page of the Blogger Redirects to list of blogposts
+
 app.get("/", function(req, res) {
   res.redirect("/posts/latest");
 });
@@ -459,9 +463,32 @@ app.post("/user/new", function(req, res) {
     }
   });
 });
-
 app.post("/subscribe/:id", function(req, res) {
-  console.log("THIS IS THE SUBSCRIBER POST!!!!" + req.body);
+  // console.log("THIS IS THE SUBSCRIBER POST!!!!" + JSON.stringify(req.body));
+  db.get("SELECT * FROM users WHERE email=(?)", req.body.inputEmail, function(err, dataInUser) {
+    console.log("DATA IN USER: " + JSON.stringify(dataInUser));
+    var uID = dataInUser.id;
+
+    var pID = req.params.id;
+    console.log("USERID" + uID + "POST ID" + pID);
+    db.run("INSERT INTO subs (userID, postID, created_at) VALUES (?, ?, CURRENT_TIMESTAMP);", uID, pID, function(err) {
+      if (err) console.log(err);
+
+    });
+    var sendgrid = require('sendgrid')(sendgrid_user, sendgrid_api);
+    var semail = new sendgrid.Email({
+      to: req.body.inputEmail,
+      from: 'whatever@gmail.com',
+      subject: "You're subscribed!",
+      text: 'You are now subscribed'
+    });
+    sendgrid.send(semail, function(err, json) {
+      if (err) {
+        return console.error(err);
+      }
+      console.log(json);
+    });
+  });
 });
 
 //upon click on edit this article Source: (index/show) Leads:(Home, Delete, Edit)
@@ -500,6 +527,7 @@ app.put("/post/:id/comment/", function(req, res) {
 //upon click on an upvote:
 app.put("/vote", function(req, res) {
   var direction = 0;
+  console.log("THIS IS RESBODYVOTE!!!"+res.body);
   db.get("SELECT * FROM users WHERE email= (?)", req.body.inputEmail, function(err, udata) {
     console.log(udata);
     if (req.body.pw === udata.password) {
@@ -517,6 +545,8 @@ app.put("/vote", function(req, res) {
         direction++;
       } else if (votePiece[2] === "down") {
         direction--;
+      } else {
+        console.log("THERES NOTHING!");
       }
       if (votePiece[0] === "cat") {
         db.run("UPDATE cats SET Cvote=Cvote+" + direction + " WHERE created_atC = (?);", votePiece[1], function(err) {

@@ -1,5 +1,6 @@
 <%include ./partials/header%>
       <label> Your User</label>
+
       <form method="POST" action="/vote?_method=PUT">
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
@@ -40,10 +41,13 @@
         <span class="created_at">Updated: <%-post.updated_atP%>
         <%}%>
         </span>
+        </form>
+        <form method="POST" action="/vote?_method=PUT">
         <span class="vote" id="post">
           <label>Post: </label>
+          <
           <input type="submit" name="post,<%=post.created_atP%>,up" value="&#8657;">
-        &nbsp;<%-post.Pvote%>&nbsp;
+        &nbsp;<%=post.Pvote%>&nbsp;
           <input type="submit" name="post,<%=post.created_atP%>,down" value="&#8659;">
         </span>
         </div>
@@ -52,7 +56,11 @@
     <img src="<%=post.PimageUrl%>">
     <p class="mainbody"><%-post.Pbody%></p>
       <div class="author">
-        <span class="author">Author: <a class="authlink" href="user/<%=post.userID%>/"><%-post.userN%></a></span> &nbsp; <span class="created_at"> User since: <%-post.created_atU%></span>&nbsp;<span class="avatar">(<%-post.avatar%>)</span>&nbsp;
+        <span class="author">Author: <a class="authlink" href="/user/<%=post.userID%>/"><%-post.userN%></a></span> 
+        &nbsp;
+         <span class="created_at"> User since: <%-post.created_atU%></span>
+         &nbsp;
+         <span class="avatar">(<%-post.avatar%>)</span>&nbsp;
         <span class="vote" id="user"> &nbsp;
         <label>Rep: </label>
         <input type="submit" name="user,<%=post.created_atU%>,up" value="&#8657;">
@@ -91,18 +99,18 @@
       </div>
     <%});%>
     </form>
+    <form>
+
     </form>
-    </form>
-    </form>
-    </form>
+    <br />
     <%}%>
     <h3>Add your own<br></h3>
     <div>
       <form method="POST" action="/cat/<%=cat.id%>/post/<%=post.id%>">
       <ul>
-              <label> Your User</label>
-      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
-      <input type="password" name="pw" id="PW" placeholder="your Password" required>
+      <label> Your User</label>
+      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" >
+      <input type="password" name="pw" id="PW" placeholder="your Password">
         <%if(error.text==="Nope!"){%>
         <span class="error">
         &#9756; 
@@ -125,7 +133,6 @@
     </main>
     </div>
     </div>
-    <form>
     <form method="POST" action="/subscribe/<%=spID.sid%>">
       <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
@@ -138,7 +145,8 @@
       <input type="submit" name= "delete" value="Delete this Post">
       </form></li>
     <li><a href="/"> See All Posts</a></li>
-    <li><a href="/cat/<%=post.catID%>/post/add"> Add another Post</a></li><span>
+    <li><a href="/cat/<%=post.catID%>/post/add"> Add another Post</a></li></span>
     </ul>
-    </form>
+    </ul>
+    
 <%include ./partials/footer%>

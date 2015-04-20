@@ -1,7 +1,6 @@
 <%include ./partials/header%>
- <form method="POST" action="/users/vote?_method=PUT">
-      <label> Your User</label>
-      <input type="text" name="inputEmail" id="email"placeholder="MyRegistered@email.com" required>
+ <form method="POST" action="/vote?_method=PUT">
+      <input type="text" name="inputEmail" id="email" placeholder="MyRegistered@email.com" required>
       <input type="password" name="pw" id="PW" placeholder="your Password" required>
         <%if(error.text==="Nope!"){%>
         <span class="error">
@@ -28,10 +27,9 @@
          <span class="created_at">&nbsp;Created: <%-cat.created_atC%></span>
         <span class="vote" id="cat"> &nbsp;
         <label>Category: </label>
-        <input type="hidden" name="category" value="<%=cat.id%>">
-        <input type="submit" name="up" value="&#8657;">
+        <input class="Cup" type="submit" name="cat,<%=cat.created_atC%>,up" value="&#8657;">
         &nbsp;<%-cat.Cvote%>&nbsp;
-        <input type="submit" name="down" value="&#8659;">
+        <input class="Cdo" type="submit" name="cat,<%=cat.created_atC%>,down" value="&#8659;">
         </span>
     </div>
     <div class="author">
@@ -39,10 +37,9 @@
       <span class="created_at"> &nbsp;Created: <%-cat.created_atU%></span>
       <span class="vote" id="user"> &nbsp;
         <label>Rep: </label>
-        <input type="hidden" name="user" value="<%=cat.userID%>">
-        <input type="submit" name="up" value="&#8657;">
+        <input type="submit" class="Uup" name="user,<%=cat.created_atU%>,up" value="&#8657;">
         &nbsp;<%-cat.Uvote%>&nbsp;
-        <input type="submit" name="down" value="&#8659;">
+        <input type="submit" class="Udo" name="user,<%=cat.created_atU%>,down" value="&#8659;">
          </span>
     </div>
     <div class="cat">
