@@ -41,9 +41,11 @@ app.get("/posts/:id", function(req, res) {
   var getpostssql = "select * from posts order by id desc limit 3;";
   if (urlthing != "latest") {
     // var starter = parseInt(req.params.id, 10);
+    if (typeof urlthing === undefined || urlthing < 2 || urlthing < 1) {
+      getpostssql = "select * from posts order by id desc limit 3;";
+    }
     getpostssql = "select * from posts where id < " + urlthing + " order by id desc limit 3;";
   }
-
   db.all(getpostssql, function(err, dataStoredInPosts) {
     if (err) console.log(err);
     else {
