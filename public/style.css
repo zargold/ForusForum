@@ -322,18 +322,17 @@ display: -webkit-flex;
   box-sizing: inherit;
   white-space: inherit;
 }
-#mceu_21, #mceu_22, #mceu_20, #mceu_19, #mceu_18,#mceu_17,#mceu_16, #mceu_15,#mceu_14, #mceu_13, #mceu_12, #mceu_11, #mceu_1, #mceu_0, #mceDefaultStyles{
-  max-width:100%;
-  width:95%;
+#mceu_21, #mceu_22, #mceu_20, #mceu_19, #mceu_18,#mceu_17,#mceu_16, #mceu_15,#mceu_14, #mceu_13, #mceu_12, #mceu_11, #mceu_1, #mceu_0, #mceu_7, #mceu_8, #mceu_6, #mceu_4,#mceDefaultStyles{
+  max-width:99%;
+  width:90%;
   box-sizing: inherit;
   white-space: inherit;
-display: -webkit-flex;
-      display: flex-box;
+  display: -webkit-flex;
+  display: flex-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: -moz-flex;
   min-width:10%;
-
 }
 #password input{
   width: 60%;
