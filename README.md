@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 I# ForusForum
  A Node, Express, SQL or NoSQL db built for looks, speed, and all the information you could ever use!
 
@@ -23,7 +23,6 @@ build your reputation and grow your user to the next level of avatar from pawn t
 Trello Board corresponding:
 [Trello](https://trello.com/b/o4G8KEIg/project-1-creating-a-new-crud-project)
 - 
-=======
 # ForusForum
  A Node, Express, SQite Stackbuilt for looks, speed, and all the information you could ever use!
 ## General Description
@@ -41,5 +40,3 @@ For use by any user who wants their posts viewed by the world. Gain reputation/v
 - build your reputation and grow your user to the next level of avatar from pawn to king!
 - Trello Board corresponding:
 - https://trello.com/b/o4G8KEIg/project-1-creating-a-new-crud-project
-- 
->>>>>>> 56464a28329e7391c10b4127f58246b4357c3de8
