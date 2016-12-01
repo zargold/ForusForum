@@ -26,66 +26,52 @@ var sendgrid_user = process.env["SENDGRID_USER"];
 
 
 //Home page of the Blogger Redirects to list of blogposts
-
 app.get("/", function(req, res) {
   res.redirect("/posts/latest");
 });
-//Which 3 posts do we see on the main screen.
 
-// function checkpages(func){
-//   var getPostsSql = "select * from posts order by id desc limit 3;";
-//   func(getPostsSql, function(err, dataInPosts){
-//     if(err){
-
-//     }
-//   })
-// }
 //redirects to here the actual list of articles including edit/add/delete/COMMENT
 app.get("/posts/:id", function(req, res) {
-  var urlthing = req.params.id;
-  // var ender=page.num*10;
-  // console.log("This is ENDER"+ender);
-  // console.log("THIS IS STARTER=" + starter);
-  // console.log("NUMBER STORED IN PAGE=" + page.num);
+  var postId = req.params.id;
   var getPostsSql = "select * from posts order by id desc limit 3;";
   var nothingleft = {
     first: "Stuff"
   };
-  if (urlthing != "latest") {
-    // var starter = parseInt(req.params.id, 10);
-    if (typeof urlthing === undefined || urlthing < 2 || urlthing < 1) {
-      getpostssql = "select * from posts order by id desc limit 3;";
+  if (postId != "latest") {
+    if (!postId || postId < 2) {
       nothingleft = {
         first: "Nothing left"
       };
-    } else {
-      getpostssql = "select * from posts where id < " + urlthing + " order by id desc limit 3;";
+    }
+    else {
+      getPostsSql = "select * from posts where id < " + postId + " order by id desc limit 3;";
     }
   }
   db.all(getPostsSql, function(err, dataStoredInPosts) {
     if (err) {
       console.log(err);
       res.redirect("/");
-    } else {
-      var pTable = dataStoredInPosts;
-      var next = pTable[pTable.length - 1].id;
+    }
+    else {
+      var posts = dataStoredInPosts;
+      var next = posts[posts.length - 1].id;
 
       var what = {
         thing: next
       };
-      console.log(pTable);
-      db.all("SELECT * FROM cats", function(err, categsdata) {
+      console.log(posts);
+      db.all("SELECT * FROM cats", function(err, categoryData) {
         if (err) console.log(err);
         else {
-          var cData = categsdata;
+          var cData = categoryData;
           db.all("SELECT * FROM comments", function(err, dataInComments) {
             if (err) console.log(err);
             else {
-              var mData = dataInComments;
-              console.log(mData);
+              var comData = dataInComments;
+              console.log(comData);
               res.render("index.ejs", { //sets data retrieved as "posts"
-                posts: pTable,
-                comments: mData,
+                posts: posts,
+                comments: comData,
                 cats: cData,
                 what: what,
                 nothing: nothingleft
@@ -110,7 +96,7 @@ app.get("/cat/add", function(req, res) {
 //User got password wrong?
 app.get("/cat/add/error", function(req, res) {
   var error = {
-    text: "Nope!"
+    text: "Incorrect Password!"
   };
   res.render("addCats.ejs", {
     error: error
@@ -214,17 +200,17 @@ app.get("/cat/:cid/post/:id", function(req, res) {
       db.get("SELECT * FROM posts INNER JOIN users ON posts.userID = users.id WHERE posts.id = (?);", postId, function(err, dataInPost) {
         if (err) console.log(err);
         else {
-          var pData = dataInPost;
-          console.log(pData);
+          var postData = dataInPost;
+          console.log(postData);
           //What is the user's info for these comments?
           db.all("SELECT * FROM comments INNER JOIN users ON comments.userID = users.id WHERE comments.postID= (?);", postId, function(err, dataInComment) {
             if (err) console.log(err);
             else {
-              var mData = dataInComment;
+              var comData = dataInComment;
               res.render("showCatPosts.ejs", {
                 cat: cData,
-                post: pData,
-                comments: mData,
+                post: postData,
+                comments: comData,
                 error: error,
                 spID: spID
               });
